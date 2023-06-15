@@ -7,8 +7,9 @@ typedef struct{
     int priorityId;
     int arrivalTime;
     int burstTime;
-    int waitingTime;
     int turnaroundTime;
+    int waitingTime;
+    int responseTime;
 } Process;
 
 void initializeProcesses(Process processes[], int num_process){

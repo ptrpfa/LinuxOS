@@ -5,8 +5,9 @@ typedef struct{
     int priorityId;
     int arrivalTime;
     int burstTime;
-    int waitingTime;
     int turnaroundTime;
+    int waitingTime;
+    int responseTime;
 } Process;
 
 void swap(Process *a, Process *b) {
