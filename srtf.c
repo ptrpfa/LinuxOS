@@ -16,12 +16,14 @@ void calclulate(Process processes[], int num){
     int rt[num];
     int arrived[num];
     int completed[num];
-    int shortest = 0, currentTime = 0, minimum = INT_MAX, finishTime = 0, complete = 0, occupied = 0, responseTime = 0;
+    int responded[num];
+    int shortest = 0, currentTime = 0, minimum = INT_MAX, finishTime = 0, complete = 0, prev = 0, responseTime = 0;
 
     for (int i = 0;i<num;i++){
         rt[i] = processes[i].burstTime;
         arrived[i] = 0;
         completed[i] = 0;
+        responded[i] = 0;
     }
 
     while(complete!=num){
@@ -33,14 +35,19 @@ void calclulate(Process processes[], int num){
         }
 
         for (int j = 0;j<num;j++){
-            if (arrived[j] == 1 && rt[j]<minimum && completed[j] != 1 && occupied == 0){
+            if (arrived[j] == 1 && rt[j]<minimum && completed[j] != 1){
                     minimum = rt[j];
+                    prev = shortest;
                     shortest = j;
-                    responseTime = currentTime;
+                    if (shortest != prev && responded[shortest] == 0)
+                    {
+                        responded[shortest] = 1;
+                        responseTime = currentTime;
+                        processes[shortest].responseTime = responseTime - processes[shortest].arrivalTime;
+                    }
                 };
         }
 
-        occupied = 1;
         rt[shortest]--;
         currentTime++;
         if (rt[shortest] == 0){
@@ -51,21 +58,18 @@ void calclulate(Process processes[], int num){
             minimum = INT_MAX;
             processes[shortest].turnaroundTime = finishTime - processes[shortest].arrivalTime;
             processes[shortest].waitingTime = processes[shortest].turnaroundTime - processes[shortest].burstTime;
-            processes[shortest].responseTime = responseTime - processes[shortest].arrivalTime;
-            occupied = 0;
             shortest = 0;
         }
     }
 }
 
-
 int main(){
 
     Process processes[4] = {
-        {1,0,0,6},
-        {2,0,0,8},
-        {3,0,0,7},
-        {4,0,0,3}
+        {1,0,0,8},
+        {2,0,1,4},
+        {3,0,2,9},
+        {4,0,3,5}
     };
 
     calclulate(processes, 4);
