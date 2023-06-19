@@ -61,16 +61,17 @@ void calclulate(Process processes[], int num){
 
 int main(){
 
-    Process processes[4] = {
-        {1,0,0,6},
-        {2,0,0,8},
-        {3,0,0,7},
-        {4,0,0,3}
+    Process processes[5] = {
+        {1,0,0,2},
+        {2,0,0,1},
+        {3,0,0,8},
+        {4,0,0,4},
+        {5,0,0,5}
     };
 
-    calclulate(processes, 4);
+    calclulate(processes, 5);
 
-    for (int i=0;i<4;i++){
+    for (int i=0;i<5;i++){
         printf("PID: %d\n", processes[i].processId);
         printf("Arrival Time: %d\n", processes[i].arrivalTime);
         printf("Burst Time: %d\n", processes[i].burstTime);
