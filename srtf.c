@@ -1,5 +1,5 @@
 #include <stdio.h>
-#include<limits.h>
+#include <limits.h>
 
 typedef struct{
     int processId;
@@ -17,7 +17,7 @@ void calclulate(Process processes[], int num){
     int arrived[num];
     int completed[num];
     int responded[num];
-    int shortest = 0, currentTime = 0, minimum = INT_MAX, finishTime = 0, complete = 0, prev = 0, responseTime = 0;
+    int flag = 0, shortest = -1, currentTime = 0, minimum = INT_MAX, finishTime = 0, complete = 0, prev = 0, responseTime = 0;
 
     for (int i = 0;i<num;i++){
         rt[i] = processes[i].burstTime;
@@ -36,6 +36,7 @@ void calclulate(Process processes[], int num){
 
         for (int j = 0;j<num;j++){
             if (arrived[j] == 1 && rt[j]<minimum && completed[j] != 1){
+                    flag = 1;
                     minimum = rt[j];
                     prev = shortest;
                     shortest = j;
@@ -48,17 +49,23 @@ void calclulate(Process processes[], int num){
                 };
         }
 
-        rt[shortest]--;
-        currentTime++;
-        if (rt[shortest] == 0){
-            complete++;
-            arrived[shortest] = 0;
-            completed[shortest] = 1;
-            finishTime = currentTime;
-            minimum = INT_MAX;
-            processes[shortest].turnaroundTime = finishTime - processes[shortest].arrivalTime;
-            processes[shortest].waitingTime = processes[shortest].turnaroundTime - processes[shortest].burstTime;
-            shortest = 0;
+        if (flag == 1){
+            rt[shortest]--;
+            currentTime++;
+            if (rt[shortest] == 0){
+                complete++;
+                arrived[shortest] = 0;
+                completed[shortest] = 1;
+                finishTime = currentTime;
+                minimum = INT_MAX;
+                processes[shortest].turnaroundTime = finishTime - processes[shortest].arrivalTime;
+                processes[shortest].waitingTime = processes[shortest].turnaroundTime - processes[shortest].burstTime;
+                shortest = -1;
+                flag = 0;
+            }
+        }
+        else{
+            currentTime++;
         }
     }
 }
