@@ -9,6 +9,7 @@ typedef struct{
     int turnaroundTime;
     int waitingTime;
     int responseTime;
+    int finishTime;
 } Process;
 
 void calclulate(Process processes[], int num){
@@ -51,6 +52,7 @@ void calclulate(Process processes[], int num){
                 completed[shortest] = 1;
                 finishTime = currentTime;
                 minimum = INT_MAX;
+                processes[shortest].finishTime = finishTime;
                 processes[shortest].turnaroundTime = finishTime - processes[shortest].arrivalTime;
                 processes[shortest].waitingTime = processes[shortest].turnaroundTime - processes[shortest].burstTime;
                 processes[shortest].responseTime = responseTime - processes[shortest].arrivalTime;
@@ -69,10 +71,10 @@ void calclulate(Process processes[], int num){
 int main(){
 
     Process processes[4] = {
-        {1,0,0,7},
-        {2,0,2,4},
-        {3,0,4,1},
-        {4,0,5,4},
+        {1,0,2,4},
+        {2,0,3,3},
+        {3,0,3,5},
+        {4,0,2,2},
     };
 
     calclulate(processes, 4);
@@ -80,6 +82,7 @@ int main(){
     for (int i=0;i<4;i++){
         printf("PID: %d\n", processes[i].processId);
         printf("Arrival Time: %d\n", processes[i].arrivalTime);
+        printf("Finish Time: %d\n", processes[i].finishTime);
         printf("Burst Time: %d\n", processes[i].burstTime);
         printf("Turnaround time: %d\n", processes[i].turnaroundTime);    
         printf("Waiting time: %d\n", processes[i].waitingTime);

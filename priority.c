@@ -17,21 +17,31 @@ void calculate(Process processes[], int num, int quantam){
     int arrived[num];
     int completed[num];
     int quantamcheck[num];
-    int shortest = 0, currentTime = 0, priority = INT_MAX, priorityIndex = -1, finishTime = 0, complete = 0, pswitch = 0;
+    int responded[num];
+    int shortest = 0, currentTime = 0, priority = INT_MAX, priorityIndex = -1, finishTime = 0, complete = 0;
 
     for (int i = 0;i<num;i++){
         rt[i] = processes[i].burstTime;
         arrived[i] = 0;
         completed[i] = 0;
         quantamcheck[i] = 0;
+        responded[i];
     }
 
     while(complete!=num){
 
+        int flag = 0;
+
         for (int j = 0;j<num;j++){
             if (processes[j].arrivalTime <= currentTime && rt[j] != 0){
                 arrived[j] = 1;
+                flag = 1;
             }
+        }
+
+        if(flag == 0){
+            currentTime++;
+            continue;
         }
 
         int firstOfPriorityFound = 0;

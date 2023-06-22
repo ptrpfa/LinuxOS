@@ -73,10 +73,10 @@ void calclulate(Process processes[], int num){
 int main(){
 
     Process processes[4] = {
-        {1,0,0,8},
-        {2,0,1,4},
-        {3,0,2,9},
-        {4,0,3,5}
+        {1,0,5,4},
+        {2,0,0,3},
+        {3,0,3,5},
+        {4,0,2,2},
     };
 
     calclulate(processes, 4);
