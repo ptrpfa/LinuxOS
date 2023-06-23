@@ -63,8 +63,9 @@ int main(){
         printf("PID: %d\n", processes[i].processId);
         printf("Arrival Time: %d\n", processes[i].arrivalTime);
         printf("Burst Time: %d\n", processes[i].burstTime);
+        printf("Turnaround time: %d\n", processes[i].turnaroundTime);       
         printf("Waiting time: %d\n", processes[i].waitingTime);
-        printf("Turnaround time: %d\n", processes[i].turnaroundTime);        
+        printf("Reponse time: %d\n", processes[i].responseTime);        
         printf("\n");
     }
 
