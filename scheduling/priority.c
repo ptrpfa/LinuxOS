@@ -18,14 +18,14 @@ void calculate(Process processes[], int num, int quantam){
     int completed[num];
     int quantamcheck[num];
     int responded[num];
-    int shortest = 0, currentTime = 0, priority = INT_MAX, priorityIndex = -1, finishTime = 0, complete = 0;
+    int priorityIndex = -1, currentTime = 0, priority = INT_MAX, finishTime = 0, complete = 0, responseTime = 0;
 
     for (int i = 0;i<num;i++){
         rt[i] = processes[i].burstTime;
         arrived[i] = 0;
         completed[i] = 0;
         quantamcheck[i] = 0;
-        responded[i];
+        responded[i] = 0;
     }
 
     while(complete!=num){
@@ -61,6 +61,12 @@ void calculate(Process processes[], int num, int quantam){
             
         }
 
+        if (responded[priorityIndex] == 0){
+            responseTime = currentTime - processes[priorityIndex].arrivalTime;
+            processes[priorityIndex].responseTime = responseTime;
+            responded[priorityIndex] = 1;
+        }
+
         rt[priorityIndex]--;
         currentTime++;
         quantamcheck[priorityIndex]++;
@@ -74,9 +80,7 @@ void calculate(Process processes[], int num, int quantam){
         }
         if (allReachedQuantum) {
             for (int j = 0; j < num; j++) {
-                if (processes[j].priorityId == priority) {
-                    quantamcheck[j] = 0;
-                }
+                quantamcheck[j] = 0;
             }
         }
         

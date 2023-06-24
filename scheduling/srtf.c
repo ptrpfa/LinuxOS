@@ -40,16 +40,15 @@ void calclulate(Process processes[], int num){
                     minimum = rt[j];
                     prev = shortest;
                     shortest = j;
-                    if (shortest != prev && responded[shortest] == 0)
-                    {
-                        responded[shortest] = 1;
-                        responseTime = currentTime;
-                        processes[shortest].responseTime = responseTime - processes[shortest].arrivalTime;
-                    }
                 };
         }
 
         if (flag == 1){
+            if (responded[shortest] == 0){
+            responseTime = currentTime - processes[shortest].arrivalTime;
+            processes[shortest].responseTime = responseTime;
+            responded[shortest] = 1;
+            }
             rt[shortest]--;
             currentTime++;
             if (rt[shortest] == 0){
@@ -73,10 +72,10 @@ void calclulate(Process processes[], int num){
 int main(){
 
     Process processes[4] = {
-        {1,0,5,4},
-        {2,0,0,3},
-        {3,0,3,5},
-        {4,0,2,2},
+        {1,0,0,8},
+        {2,0,1,4},
+        {3,0,2,9},
+        {4,0,3,5},
     };
 
     calclulate(processes, 4);
