@@ -18,7 +18,7 @@ int main(void) {
 	char digest[BUF_SIZE];
 
 	// Open the device
-	puts("Opening character device, wait please...");
+	printf("Opening character device, wait please...");
 	dev = open(CHAR_DEV_PATH, O_RDWR); // Open the device in read and write mode
 	if(dev < 0) { // Handle errors
 		perror("Failed to open the device");
@@ -27,24 +27,26 @@ int main(void) {
 	
 	// Read the plaintext from stdin
 	char plaintext[BUF_SIZE];
-	fputs("Insert a string: ", stdout);
+	printf("Insert a string: ");
 	if(fgets(plaintext, sizeof(plaintext), stdin) == NULL) {
-		puts("Error while reading from stdin");
+		printf("Error while reading from stdin");
 		return -1;
 	}
 
 	// Read the hashing algorithm from stdin
 	char type[8];
-	fputs("Choose a hashing algorith(MD5,SHA1,SHA256): ", stdout);
+	printf("Choose a hashing algorith(MD5,SHA1,SHA256): ");
 	if(fgets(type, sizeof(type), stdin) == NULL) {
-		puts("Error while reading from stdin");
+		printf("Error while reading from stdin");
 		return -1;
 	}
 
-	// Normalize input
+	// Parse string using newline as delimiter
 	strtok(plaintext, "\n");
 	strtok(type, "\n");
-	for(char* p = type; *p; ++p) *p = toupper((unsigned char)*p);
+	for(char* p = type; *p; ++p) {
+		*p = toupper((unsigned char)*p);
+	}
 
 	// Create an userspace struct
 	userspace_t u;
@@ -52,13 +54,15 @@ int main(void) {
 	if(!strcmp(type, "MD5")) u.algorithm = MD5;
 	else if(!strcmp(type, "SHA1")) u.algorithm = SHA1;
 	else if(!strcmp(type, "SHA256")) u.algorithm = SHA256;
+	else if(!strcmp(type, "SHA384")) u.algorithm = SHA384;
+	else if(!strcmp(type, "SHA512")) u.algorithm = SHA512;
 	else {
-		puts("Algorithm not supported");
+		printf("Algorithm not supported");
 		return -1;
 	}
 
 	// Write to device
-	puts("Sending data to kernel, wait please...");
+	printf("Sending data to kernel, wait please...");
 	ret = write(dev, &u, sizeof(userspace_t));
 	if(ret < 0) {
 		perror("Error while sending data to kernel space");
@@ -72,12 +76,37 @@ int main(void) {
 		return errno;
 	}
 
-	// Print digest in hexadecimal
-	size_t bytes_to_print = (u.algorithm == SHA256) ? 32 : (u.algorithm == SHA1 ? 20 : 16);
+	// Initialise number of bytes to print, depending on the selected hashing algorithm
+	size_t bytes_to_print;
+	if(u.algorithm == MD5) {
+		// Read 16 bytes for MD5 hashes
+		bytes_to_print = 16;
+	}
+	else if(u.algorithm == SHA1) {
+		// Read 20 bytes for SHA1 hashes
+		bytes_to_print = 20;
+	}
+	else if(u.algorithm == SHA256) {
+		// Read 32 bytes for SHA256 hashes
+		bytes_to_print = 32;
+	}
+	else if(u.algorithm == SHA384) {
+		// Read 48 bytes for SHA384 hashes
+		bytes_to_print = 48;
+	}
+	else if(u.algorithm == SHA512) {
+		// Read 64 bytes for SHA512 hashes
+		bytes_to_print = 64;
+	}
+	else {
+		// Read zero bytes upon no matching hashing algorithm
+		bytes_to_print = 0;
+	}
+
 	printf("Original string: \"%s\", %s digest: \"", u.plaintext, type);
 	for(size_t i = 0; i < bytes_to_print; i++)
 		printf("%02x", (unsigned char)digest[i]);
-	puts("\"");
+	printf("\"");
 	
 	return 0;
 
