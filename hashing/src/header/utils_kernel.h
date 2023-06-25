@@ -14,9 +14,9 @@
 static int dev_num;                                                         // Major number of the character device
 static struct class * device_class = NULL;                                  // Device driver class pointer
 static struct device * device_dev = NULL;                                   // Device driver pointer
-static size_t open_count = 0;                                               // Number of types character device has been opened
-static userspace_t userspace;                                               // Data from userspace
-static char digest[BUF_SIZE];                                               // Result of hashing process in kernel space
+static size_t open_count = 0;                                               // Number of times character device has been opened
+static userspace_t userspace;                                               // Instance of userspace struct used for passing of data between user and kernel space
+static char digest[BUF_SIZE];                                               // Kernel space hash digest
 
 /* Function Prototypes */
 static int device_open(struct inode*, struct file*);                        // Function that is invoked whenever character device is opened
@@ -27,7 +27,7 @@ static ssize_t device_write(struct file*, const char*, size_t, loff_t*);    // F
 /* Struct Definitions */
 // Struct to map local file operation functions to default system calls (reimplement default functions)
 static struct file_operations fo = {
-	.owner = THIS_MODULE,                                                   // Pointer to module that holding variable fo
+	.owner = THIS_MODULE,                                                   // Pointer to module that is holding variable fo
 	.open = device_open,                                                    // Remap open function
 	.release = device_release,                                              // Remap release function
 	.read = device_read,                                                    // Remap read function

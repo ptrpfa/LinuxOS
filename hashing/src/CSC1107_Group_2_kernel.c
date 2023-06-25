@@ -1,4 +1,4 @@
-/* Hash module kernel program */
+/* KERNEL: Hash Module Program */
 // Import custom header file
 #include "header/utils_kernel.h" 
 
@@ -46,7 +46,7 @@ static void __exit device_exit(void) {
 	pr_info("%s: Module successfully unloaded!\n", DEV_NAME);											// Print to kernel ring buffer for debugging
 }
 
-// Function is invoked whenever a user space program opens the character device (used to setup environment for module)
+// Function is invoked whenever a user space program opens the character device (used to set up environment for module)
 static int device_open(struct inode * inodep, struct file * filep) {
 	// Print to kernel ring buffer for debugging
 	pr_info("%s: Character device has been opened %d time(s)!\n", DEV_NAME, (int)++open_count);
@@ -83,7 +83,7 @@ static ssize_t device_read(struct file * filep, char * buffer, size_t len, loff_
 static ssize_t device_write(struct file * filep, const char * buffer, size_t len, loff_t * offset) {
 	// Initialise variables
 	size_t bytes_not_read = 0;		// Variable to track number of bytes that are not read successfully from the user space
-	size_t hash_digest_bytes; 		// Initialise number of bytes to read, depending on the selected hashing algorithm
+	size_t hash_digest_bytes; 		// Initialise number of bytes to read for hash digest, depending on the selected hashing algorithm
 	struct crypto_shash* algorithm;	// Pointer to hashing algorithm struct
 	struct shash_desc* desc;		// Pointer to hashing descriptor struct
 	int err = 0;					// Variable to store error value, if any
@@ -171,7 +171,7 @@ static ssize_t device_write(struct file * filep, const char * buffer, size_t len
 	if(err) {	// Check for errors during initialisation
 		// Print to kernel ring buffer for debugging
 		pr_err("%s: Failed to initialize shash\n", DEV_NAME);
-		// Jump code execition to predefined area for handling errors that occur during the hashing process
+		// Jump code execution to predefined area for handling errors that occur during the hashing process
 		goto out;
 	}
 
@@ -180,16 +180,16 @@ static ssize_t device_write(struct file * filep, const char * buffer, size_t len
 	if(err) {	// Check for errors during hashing
 		// Print to kernel ring buffer for debugging
 		pr_err("%s: Failed to execute hashing function\n", DEV_NAME);
-		// Jump code execition to predefined area for handling errors that occur during the hashing process
+		// Jump code execution to predefined area for handling errors that occur during the hashing process
 		goto out;
 	}
 
-	// Write the result to a new char buffer
+	// Write the result to hash digest buffer
 	err = crypto_shash_final(desc, digest);
 	if(err) {	// Check for errors during end of hashing
 		// Print to kernel ring buffer for debugging
 		pr_err("%s: Failed to complete hashing function\n", DEV_NAME);
-		// Jump code execition to predefined area for handling errors that occur during the hashing process
+		// Jump code execution to predefined area for handling errors that occur during the hashing process
 		goto out;
 	}
 
@@ -201,21 +201,19 @@ static ssize_t device_write(struct file * filep, const char * buffer, size_t len
 	// Set kernel hash digest value of userspace struct
 	memcpy(userspace.kernel_hash_digest, digest, hash_digest_bytes);
 
-	/* Print hashing information obtained in the kernel space */
-	pr_info("%s: Original sentence received from user space = \"%s\"\n", DEV_NAME, userspace.plaintext);		// Print original sentence obtained from the user space
-	pr_info("%s: Hashed sentence received from user space = \"", DEV_NAME);										// Print hashed sentence obtained from the user space
+	/* Print hashing information obtained in the kernel space from the user space */
+	pr_info("%s: Original sentence received from user space = %s\n", DEV_NAME, userspace.plaintext);			// Print original sentence obtained from the user space
+	pr_info("%s: Hashed sentence received from user space = ", DEV_NAME);										// Print hashed sentence obtained from the user space
 	// Loop through each byte of user space hash digest and print the results
 	for(size_t i = 0; i < hash_digest_bytes; i++) {
 		printk(KERN_CONT "%02x", userspace.user_hash_digest[i]);
 	}
-	printk(KERN_CONT "\"");
-	pr_info("%s: Hashing function selected in user space = \"%s\"\n", DEV_NAME, hash_type);						// Print hash algorithm obtained from the user space
-	pr_info("%s: Hashed sentence in kernel space = \"", DEV_NAME);												// Print hashed sentence obtained in the kernel space
+	pr_info("%s: Hashing function selected in user space = %s\n", DEV_NAME, hash_type);							// Print hash algorithm obtained from the user space
+	pr_info("%s: Hashed sentence in kernel space = ", DEV_NAME);												// Print hashed sentence obtained in the kernel space
 	// Loop through each byte of kernel space hash digest and print the results
 	for(size_t i = 0; i < hash_digest_bytes; i++) {
 		printk(KERN_CONT "%02x", digest[i]);
 	}
-	printk(KERN_CONT "\"");
 
 	// Compare both user and kernel hash digests
 	if (!memcmp(digest, userspace.user_hash_digest, hash_digest_bytes)) {

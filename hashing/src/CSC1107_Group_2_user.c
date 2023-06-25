@@ -1,4 +1,4 @@
-/* Client user-space program */
+/* USER: Client Program */
 // Import custom header file
 #include "header/utils_user.h" 
 
@@ -6,7 +6,7 @@
 int main(void) {
 
 	// Initialise base variables
-	userspace_t u; 						// Initialise an instance of the custom userspace struct (custom struct used to pass multiple parameters to kernel module)
+	userspace_t u; 						// Initialise an instance of the custom userspace struct (custom struct used to pass multiple parameters to/from kernel module)
 	int char_dev; 						// Integer to store character device's file descriptor value
 	char* plaintext;					// Character pointer to store plaintext string
 	char hash_algorithm[TYPE_SIZE]; 	// Character array to store selected hashing algorithm
@@ -86,8 +86,8 @@ int main(void) {
 		}
 	}
 
-	// Initialise variables to store hash
-	unsigned char user_hash_digest[hash_digest_bytes]; 		// Character array to store user space hashed string
+	// Initialise character array to store user space hashed string
+	unsigned char user_hash_digest[hash_digest_bytes];
 
 	/* User-Space Hashing */
 	// Check hashing algorithm used and compute user space hash
@@ -134,7 +134,7 @@ int main(void) {
 	} 
 
 	// Prompt user to continue
-	printf("Please press either the Enter or Space key to read from the kernel space: ");
+	printf("Please press either the <Enter> or <Space> key to read from the kernel space: ");
 	scanf("%c", &user_input);
 	// Check for invalid characters
 	if(user_input != ' ' && user_input != '\n') {
@@ -145,7 +145,7 @@ int main(void) {
 	} 
 	
 	/* Read from Kernel-Space */
-	// Initialise an instance of the custom userspace struct (custom struct used to pass multiple parameters to kernel module)
+	// Initialise an instance of the custom userspace struct (custom struct used to pass multiple parameters to/from kernel module)
 	userspace_t k; 						
 
 	// Read from character device
@@ -156,7 +156,7 @@ int main(void) {
 		return errno;
 	}
 
-	// Print results
+	/* Print Results */
 	printf("Original sentence in the user space: %s\n", k.plaintext);
 	printf("Generated hashed sentence in the user space: ");
 	// Loop through each byte of received userspace struct's user hash digest and print the results
