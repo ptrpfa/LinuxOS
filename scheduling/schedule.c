@@ -8,13 +8,13 @@ void setup(Process fcfs_processes[], Process sjf_processes[], Process srtf_proce
 
     initializeProcesses(processes, num);
 
-    for (int i = 0; i < num; i++)
-    {
-        printf("PID: %d\n", processes[i].processId);
-        printf("Arrival Time: %d\n", processes[i].arrivalTime);
-        printf("Burst Time: %d\n", processes[i].burstTime);
-        printf("Priority ID: %d\n", processes[i].priorityId);
-    }
+    // for (int i = 0; i < num; i++)
+    // {
+    //     printf("PID: %d\n", processes[i].processId);
+    //     printf("Arrival Time: %d\n", processes[i].arrivalTime);
+    //     printf("Burst Time: %d\n", processes[i].burstTime);
+    //     printf("Priority ID: %d\n", processes[i].priorityId);
+    // }
     
 
     for (int i = 0; i < num; i++)
