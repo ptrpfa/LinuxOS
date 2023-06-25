@@ -18,7 +18,7 @@ void calclulate_srtf(Process processes[], int num){
     int arrived[num];
     int completed[num];
     int responded[num];
-    int flag = 0, shortest = -1, currentTime = 0, minimum = INT_MAX, finishTime = 0, complete = 0, prev = 0, responseTime = 0;
+    int flag = 0, shortest = -1, currentTime = 0, minimum = INT_MAX, finishTime = 0, complete = 0, responseTime = 0;
 
     for (int i = 0;i<num;i++){
         rt[i] = processes[i].burstTime;
