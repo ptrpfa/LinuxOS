@@ -64,43 +64,16 @@ static int device_release(struct inode * inodep, struct file * filep) {
 
 // Function is invoked whenever a user space program calls the read() system call from the user space (read data from kernel space to user space)
 static ssize_t device_read(struct file * filep, char * buffer, size_t len, loff_t * offset) {
-	// Initialise number of bytes to read, depending on the selected hashing algorithm
-	size_t bytes_to_read;
-	if(userspace.algorithm == HASH_MD5) {
-		// Read 16 bytes for MD5 hashes
-		bytes_to_read = 16;
-	}
-	else if(userspace.algorithm == HASH_SHA1) {
-		// Read 20 bytes for SHA1 hashes
-		bytes_to_read = 20;
-	}
-	else if(userspace.algorithm == HASH_SHA256) {
-		// Read 32 bytes for SHA256 hashes
-		bytes_to_read = 32;
-	}
-	else if(userspace.algorithm == HASH_SHA384) {
-		// Read 48 bytes for SHA384 hashes
-		bytes_to_read = 48;
-	}
-	else if(userspace.algorithm == HASH_SHA512) {
-		// Read 64 bytes for SHA512 hashes
-		bytes_to_read = 64;
-	}
-	else {
-		// Read zero bytes upon no matching hashing algorithm
-		bytes_to_read = 0;
-	}
-
-	// Read hash results from character device (read data from kernel space to user space)
-	if(copy_to_user(buffer, digest, bytes_to_read)) { // Check for errors during read operation
+	// Read userspace struct from character device (read data from kernel space to user space)
+	if(copy_to_user(buffer, &userspace, sizeof(userspace_t))) { // Check for errors during read operation
 		// Print to kernel ring buffer for debugging
-		pr_warn("%s: Failed to send hash result to userspace\n", DEV_NAME);
+		pr_warn("%s: Failed to send userspace struct to user space!\n", DEV_NAME);
 		// Return value of error condition
 		return -EFAULT;
 	}
 	else {
 		// Print to kernel ring buffer for debugging
-		pr_info("%s: Successfully read hash result from character device!\n", DEV_NAME);
+		pr_info("%s: Successfully read userspace struct from character device!\n", DEV_NAME);
     	// Return status of read from character device
 		return 0;
 	}
@@ -225,14 +198,37 @@ static ssize_t device_write(struct file * filep, const char * buffer, size_t len
 	// Free dynamically allocated space in kernel memory pool
 	kfree(desc);
 
-	// Parse hashes from user and kernel space
+	// Set kernel hash digest value of userspace struct
+	memcpy(userspace.kernel_hash_digest, digest, hash_digest_bytes);
 
-	// Print user space data
-	pr_info("%s: Original sentence received from user space = \"%s\"\n", DEV_NAME, userspace.plaintext);
-	pr_info("%s: Hashed sentence received from user space = \"%s\"\n", DEV_NAME, userspace.user_hash_digest);
-	pr_info("%s: Hashing function selected in user space = \"%s\"\n", DEV_NAME, hash_type);
-	pr_info("%s: Hashed sentence in kernel space = \"%s\"\n", DEV_NAME, digest);
+	/* Print hashing information obtained in the kernel space */
+	pr_info("%s: Original sentence received from user space = \"%s\"\n", DEV_NAME, userspace.plaintext);		// Print original sentence obtained from the user space
+	pr_info("%s: Hashed sentence received from user space = \"", DEV_NAME);										// Print hashed sentence obtained from the user space
+	// Loop through each byte of user space hash digest and print the results
+	for(size_t i = 0; i < hash_digest_bytes; i++) {
+		printk(KERN_CONT "%02x", userspace.user_hash_digest[i]);
+	}
+	printk(KERN_CONT "\"");
+	pr_info("%s: Hashing function selected in user space = \"%s\"\n", DEV_NAME, hash_type);						// Print hash algorithm obtained from the user space
+	pr_info("%s: Hashed sentence in kernel space = \"", DEV_NAME);												// Print hashed sentence obtained in the kernel space
+	// Loop through each byte of kernel space hash digest and print the results
+	for(size_t i = 0; i < hash_digest_bytes; i++) {
+		printk(KERN_CONT "%02x", digest[i]);
+	}
+	printk(KERN_CONT "\"");
 
+	// Compare both user and kernel hash digests
+	if (!memcmp(digest, userspace.user_hash_digest, hash_digest_bytes)) {
+		pr_info("%s: Both hashed sentences are the same!", DEV_NAME); 											// Print comparison results of both user and kernel space hashes
+		userspace.comparison_result = 1;																		// Set comparison result of both generated hashes to true (1: identical, 0: no match)
+	} 
+	else {
+		// Arrays are different
+		pr_info("%s: Both hashed sentences are not the same!", DEV_NAME); 										// Print comparison results of both user and kernel space hashes
+		userspace.comparison_result = 0;																		// Set comparison result of both generated hashes to false (1: identical, 0: no match)
+	}
+
+	/* Function Exit */
 	// Return status of write to character device
 	return 0;
 

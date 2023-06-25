@@ -1,0 +1,1 @@
+cmd_/home/pi/linux/CSC1107OS/OS_Assignment/hashing/src/Module.symvers :=  sed 's/ko$$/o/'  /home/pi/linux/CSC1107OS/OS_Assignment/hashing/src/modules.order | scripts/mod/modpost -m -a    -o /home/pi/linux/CSC1107OS/OS_Assignment/hashing/src/Module.symvers -e -i Module.symvers -T - 

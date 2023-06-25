@@ -11,6 +11,7 @@ int main(void) {
 	char* plaintext;					// Character pointer to store plaintext string
 	char hash_algorithm[TYPE_SIZE]; 	// Character array to store selected hashing algorithm
 	size_t hash_digest_bytes = 0;		// Number of bytes allocated for hash digest (varies according to hashing algorithm used)
+	char user_input;					// User's input character after initial write to kernel space
 
 	// Get plaintext datetime string
 	plaintext = get_datetime_string();
@@ -87,7 +88,6 @@ int main(void) {
 
 	// Initialise variables to store hash
 	unsigned char user_hash_digest[hash_digest_bytes]; 		// Character array to store user space hashed string
-	char kernel_hash_digest[hash_digest_bytes]; 			// Character array to store kernel space hashed string
 
 	/* User-Space Hashing */
 	// Check hashing algorithm used and compute user space hash
@@ -124,6 +124,7 @@ int main(void) {
 		return errno;
 	}
 
+	/* Write to Kernel-Space */
 	// Write userspace struct from the user space to the character device in the kernel space
 	if(write(char_dev, &u, sizeof(userspace_t)) < 0) {
 		// Print error for debugging
@@ -132,8 +133,23 @@ int main(void) {
 		return errno;
 	} 
 
+	// Prompt user to continue
+	printf("Please press either the Enter or Space key to read from the kernel space: ");
+	scanf("%c", &user_input);
+	// Check for invalid characters
+	if(user_input != ' ' && user_input != '\n') {
+		// Print error for debugging
+		printf("You've entered an invalid character! Program terminated..\n");
+		// Terminate program if an invalid character is received
+		return -1;
+	} 
+	
+	/* Read from Kernel-Space */
+	// Initialise an instance of the custom userspace struct (custom struct used to pass multiple parameters to kernel module)
+	userspace_t k; 						
+
 	// Read from character device
-	if(read(char_dev, kernel_hash_digest, BUF_SIZE) < 0) {
+	if(read(char_dev, &k, sizeof(u)) < 0) {
 		// Print error for debugging
 		perror("Error when reading data from the kernel space!");
 		// Terminate program (abnormal termination) and return value of error 
@@ -141,17 +157,20 @@ int main(void) {
 	}
 
 	// Print results
-	printf("Plaintext received: %s\nHashing Algorithm: %s\nKernel Hash: ", u.plaintext, hash_algorithm);
-	// Loop through each byte of hash digest and print the results
+	printf("Original sentence in the user space: %s\n", k.plaintext);
+	printf("Generated hashed sentence in the user space: ");
+	// Loop through each byte of received userspace struct's user hash digest and print the results
 	for(size_t i = 0; i < hash_digest_bytes; i++) {
-		printf("%02x", (unsigned char)kernel_hash_digest[i]);	
+		printf("%02x", (unsigned char)k.user_hash_digest[i]);	
 	}
-	printf("\nUser Hash: ");
-	// Loop through each byte of hash digest and print the results
+	printf("\nType of hashing function selected in the user space: %s\n", hash_algorithm);
+	printf("Received hashed sentence from the kernel space module using the same hashing function: ");
+	// Loop through each byte of received userspace struct's kernel hash digest and print the results
 	for(size_t i = 0; i < hash_digest_bytes; i++) {
-		printf("%02x", (unsigned char)user_hash_digest[i]);	
+		printf("%02x", (unsigned char)k.kernel_hash_digest[i]);	
 	}
-	printf("\n");
+	printf("\nReceived comparison result from kernel space module: %s\n", k.comparison_result ? "Identical hashes (TRUE)" : "Not identical hashes (FALSE)");
+	
     // End of program
 	free(plaintext);		// Free dynamically allocated memory for plaintext string
 	return 0;				// Normal program termination
