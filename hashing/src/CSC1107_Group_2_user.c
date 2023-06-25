@@ -5,109 +5,155 @@
 // Program entrypoint
 int main(void) {
 
-	// Get user's option
-    // int user_option = 0;
+	// Initialise base variables
+	userspace_t u; 						// Initialise an instance of the custom userspace struct (custom struct used to pass multiple parameters to kernel module)
+	int char_dev; 						// Integer to store character device's file descriptor value
+	char* plaintext;					// Character pointer to store plaintext string
+	char hash_algorithm[TYPE_SIZE]; 	// Character array to store selected hashing algorithm
+	size_t hash_digest_bytes = 0;		// Number of bytes allocated for hash digest (varies according to hashing algorithm used)
 
-    // Read current date and time and return
-    // It is 18:36:22 on 18th May 2023 now
-
-    // Calculate hash value of sentence 
-    // 
-
-	int dev, ret;
-	char digest[BUF_SIZE];
-
-	// Open the device
-	printf("Opening character device, wait please...");
-	dev = open(CHAR_DEV_PATH, O_RDWR); // Open the device in read and write mode
-	if(dev < 0) { // Handle errors
-		perror("Failed to open the device");
-		return errno;
-	}
-	
-	// Read the plaintext from stdin
-	char plaintext[BUF_SIZE];
-	printf("Insert a string: ");
-	if(fgets(plaintext, sizeof(plaintext), stdin) == NULL) {
-		printf("Error while reading from stdin");
+	// Get plaintext datetime string
+	plaintext = get_datetime_string();
+	if(plaintext == NULL) {	// Check for errors when getting datetime string
+		// Print error for debugging
+		printf("Error when getting datetime string!\n");
+		// Terminate program (abnormal termination)
 		return -1;
-	}
-
-	// Read the hashing algorithm from stdin
-	char type[8];
-	printf("Choose a hashing algorith(MD5,SHA1,SHA256): ");
-	if(fgets(type, sizeof(type), stdin) == NULL) {
-		printf("Error while reading from stdin");
-		return -1;
-	}
-
-	// Parse string using newline as delimiter
-	strtok(plaintext, "\n");
-	strtok(type, "\n");
-	for(char* p = type; *p; ++p) {
-		*p = toupper((unsigned char)*p);
-	}
-
-	// Create an userspace struct
-	userspace_t u;
-	strncpy((char*)u.plaintext, plaintext, BUF_SIZE);
-	if(!strcmp(type, "MD5")) u.algorithm = MD5;
-	else if(!strcmp(type, "SHA1")) u.algorithm = SHA1;
-	else if(!strcmp(type, "SHA256")) u.algorithm = SHA256;
-	else if(!strcmp(type, "SHA384")) u.algorithm = SHA384;
-	else if(!strcmp(type, "SHA512")) u.algorithm = SHA512;
+	}	
 	else {
-		printf("Algorithm not supported");
+		// Print for debugging
+		printf("Original Sentence: %s\n", plaintext);
+		// Set plaintext value of userspace struct
+		strncpy((char*)u.plaintext, plaintext, BUF_SIZE);
+	}
+
+	// Get selected hashing algorithm from user's input
+	printf("Select a hashing algorithm (MD5, SHA1, SHA256, SHA384, SHA512): ");
+	// Check for errors when getting user's input
+	if(fgets(hash_algorithm, TYPE_SIZE, stdin) == NULL) {
+		// Print error for debugging
+		printf("Error while getting hashing algorithm!\n");
+		// Terminate program (abnormal termination)
 		return -1;
-	}
-
-	// Write to device
-	printf("Sending data to kernel, wait please...");
-	ret = write(dev, &u, sizeof(userspace_t));
-	if(ret < 0) {
-		perror("Error while sending data to kernel space");
-		return errno;
-	}
-
-	// Read from device
-	ret = read(dev, digest, BUF_SIZE);
-	if(ret < 0) {
-		perror("Error while reading data from kernel space");
-		return errno;
-	}
-
-	// Initialise number of bytes to print, depending on the selected hashing algorithm
-	size_t bytes_to_print;
-	if(u.algorithm == MD5) {
-		// Read 16 bytes for MD5 hashes
-		bytes_to_print = 16;
-	}
-	else if(u.algorithm == SHA1) {
-		// Read 20 bytes for SHA1 hashes
-		bytes_to_print = 20;
-	}
-	else if(u.algorithm == SHA256) {
-		// Read 32 bytes for SHA256 hashes
-		bytes_to_print = 32;
-	}
-	else if(u.algorithm == SHA384) {
-		// Read 48 bytes for SHA384 hashes
-		bytes_to_print = 48;
-	}
-	else if(u.algorithm == SHA512) {
-		// Read 64 bytes for SHA512 hashes
-		bytes_to_print = 64;
 	}
 	else {
-		// Read zero bytes upon no matching hashing algorithm
-		bytes_to_print = 0;
+		// Remove trailing newline delimiting character
+		strtok(hash_algorithm, "\n");
+		
+		// Loop through each character of selected hash algorithm
+		for(char* p = hash_algorithm; *p; p++) {
+			// Turn each character to uppercase
+			*p = toupper((unsigned char)*p);
+		}
+
+		// Check hashing algorithm used
+		if(!strcmp(hash_algorithm, "MD5")) {
+			// Set hashing algorithm value of userspace struct to MD5
+			u.algorithm = HASH_MD5;
+			// Read 16 bytes for MD5 hashes
+			hash_digest_bytes = 16;
+		}
+		else if(!strcmp(hash_algorithm, "SHA1")) {
+			// Set hashing algorithm value of userspace struct to SHA1
+			u.algorithm = HASH_SHA1;
+			// Read 20 bytes for SHA1 hashes
+			hash_digest_bytes = 20;
+		}
+		else if(!strcmp(hash_algorithm, "SHA256")) {
+			// Set hashing algorithm value of userspace struct to SHA256
+			u.algorithm = HASH_SHA256;
+			// Read 32 bytes for SHA256 hashes
+			hash_digest_bytes = 32;
+		}
+		else if(!strcmp(hash_algorithm, "SHA384")) {
+			// Set hashing algorithm value of userspace struct to SHA384
+			u.algorithm = HASH_SHA384;
+			// Read 48 bytes for SHA384 hashes
+			hash_digest_bytes = 48;
+		}
+		else if(!strcmp(hash_algorithm, "SHA512")) {
+			// Set hashing algorithm value of userspace struct to SHA512
+			u.algorithm = HASH_SHA512;
+			// Read 64 bytes for SHA512 hashes
+			hash_digest_bytes = 64;
+		}
+		else {
+			// Print error for debugging
+			printf("Selected hashing algorithm is not supported!\n");
+			// Terminate program (abnormal termination)
+			return -1;
+		}
 	}
 
-	printf("Original string: \"%s\", %s digest: \"", u.plaintext, type);
-	for(size_t i = 0; i < bytes_to_print; i++)
-		printf("%02x", (unsigned char)digest[i]);
-	printf("\"");
-	
-	return 0;
+	// Initialise variables to store hash
+	unsigned char user_hash_digest[hash_digest_bytes]; 		// Character array to store user space hashed string
+	char kernel_hash_digest[hash_digest_bytes]; 			// Character array to store kernel space hashed string
+
+	/* User-Space Hashing */
+	// Check hashing algorithm used and compute user space hash
+	if(!strcmp(hash_algorithm, "MD5")) {
+		// Compute MD5 hash
+		compute_md5_hash(plaintext, strlen(plaintext), user_hash_digest);		
+	}
+	else if(!strcmp(hash_algorithm, "SHA1")) {
+		// Compute SHA1 hash
+		compute_sha1_hash(plaintext, strlen(plaintext), user_hash_digest);
+	}
+	else if(!strcmp(hash_algorithm, "SHA256")) {
+		// Compute SHA256 hash
+		compute_sha256_hash(plaintext, strlen(plaintext), user_hash_digest);
+	}
+	else if(!strcmp(hash_algorithm, "SHA384")) {
+		// Compute SHA384 hash
+		compute_sha384_hash(plaintext, strlen(plaintext), user_hash_digest);
+	}
+	else if(!strcmp(hash_algorithm, "SHA512")) {
+		// Compute SHA512 hash
+        compute_sha512_hash(plaintext, strlen(plaintext), user_hash_digest);
+	}
+	// Set user hash digest value of userspace struct
+	memcpy(u.user_hash_digest, user_hash_digest, hash_digest_bytes);
+
+	// Open character device in kernel space (read & write mode)
+	char_dev = open(CHAR_DEV_PATH, O_RDWR); 
+	// Check for errors when opening character device
+	if(char_dev < 0) { 
+		// Print error for debugging
+		perror("Failed to open the character device!\n");
+		// Terminate program (abnormal termination) and return value of error 
+		return errno;
+	}
+
+	// Write userspace struct from the user space to the character device in the kernel space
+	if(write(char_dev, &u, sizeof(userspace_t)) < 0) {
+		// Print error for debugging
+		perror("Error when writing data from the user space to the kernel space!");
+		// Terminate program (abnormal termination) and return value of error 
+		return errno;
+	} 
+
+	// Read from character device
+	if(read(char_dev, kernel_hash_digest, BUF_SIZE) < 0) {
+		// Print error for debugging
+		perror("Error when reading data from the kernel space!");
+		// Terminate program (abnormal termination) and return value of error 
+		return errno;
+	}
+
+	// Print results
+	printf("Plaintext received: %s\nHashing Algorithm: %s\nKernel Hash: ", u.plaintext, hash_algorithm);
+	// Loop through each byte of hash digest and print the results
+	for(size_t i = 0; i < hash_digest_bytes; i++) {
+		printf("%02x", (unsigned char)kernel_hash_digest[i]);	
+	}
+	printf("\nUser Hash: ");
+	// Loop through each byte of hash digest and print the results
+	for(size_t i = 0; i < hash_digest_bytes; i++) {
+		printf("%02x", (unsigned char)user_hash_digest[i]);	
+	}
+	printf("\n");
+    // End of program
+	free(plaintext);		// Free dynamically allocated memory for plaintext string
+	return 0;				// Normal program termination
 
 }
