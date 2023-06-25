@@ -8,14 +8,15 @@
 #include <linux/slab.h>         // For in-kernel dynamic memory allocation
 #include <linux/uaccess.h>      // For userspace access functions (copy_to_user() and copy_from_user())
 #include <crypto/hash.h>        // For cryptographic hashing functions
+#include <linux/string.h>		// For string functions
 
 /* Global Variables */
 static int dev_num;                                                         // Major number of the character device
 static struct class * device_class = NULL;                                  // Device driver class pointer
 static struct device * device_dev = NULL;                                   // Device driver pointer
-static size_t open_count = 0;                                               // Number of types this device has been opened
+static size_t open_count = 0;                                               // Number of types character device has been opened
 static userspace_t userspace;                                               // Data from userspace
-static char digest[BUF_SIZE];                                               // Result of hashing process
+static char digest[BUF_SIZE];                                               // Result of hashing process in kernel space
 
 /* Function Prototypes */
 static int device_open(struct inode*, struct file*);                        // Function that is invoked whenever character device is opened

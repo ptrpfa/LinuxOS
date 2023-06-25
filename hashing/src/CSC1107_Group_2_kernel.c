@@ -66,23 +66,23 @@ static int device_release(struct inode * inodep, struct file * filep) {
 static ssize_t device_read(struct file * filep, char * buffer, size_t len, loff_t * offset) {
 	// Initialise number of bytes to read, depending on the selected hashing algorithm
 	size_t bytes_to_read;
-	if(userspace.algorithm == MD5) {
+	if(userspace.algorithm == HASH_MD5) {
 		// Read 16 bytes for MD5 hashes
 		bytes_to_read = 16;
 	}
-	else if(userspace.algorithm == SHA1) {
+	else if(userspace.algorithm == HASH_SHA1) {
 		// Read 20 bytes for SHA1 hashes
 		bytes_to_read = 20;
 	}
-	else if(userspace.algorithm == SHA256) {
+	else if(userspace.algorithm == HASH_SHA256) {
 		// Read 32 bytes for SHA256 hashes
 		bytes_to_read = 32;
 	}
-	else if(userspace.algorithm == SHA384) {
+	else if(userspace.algorithm == HASH_SHA384) {
 		// Read 48 bytes for SHA384 hashes
 		bytes_to_read = 48;
 	}
-	else if(userspace.algorithm == SHA512) {
+	else if(userspace.algorithm == HASH_SHA512) {
 		// Read 64 bytes for SHA512 hashes
 		bytes_to_read = 64;
 	}
@@ -110,9 +110,11 @@ static ssize_t device_read(struct file * filep, char * buffer, size_t len, loff_
 static ssize_t device_write(struct file * filep, const char * buffer, size_t len, loff_t * offset) {
 	// Initialise variables
 	size_t bytes_not_read = 0;		// Variable to track number of bytes that are not read successfully from the user space
+	size_t hash_digest_bytes; 		// Initialise number of bytes to read, depending on the selected hashing algorithm
 	struct crypto_shash* algorithm;	// Pointer to hashing algorithm struct
 	struct shash_desc* desc;		// Pointer to hashing descriptor struct
 	int err = 0;					// Variable to store error value, if any
+	char* hash_type = NULL;			// Variable to store type of hashing algorithm used
 
 	// Read bytes from user space (read data from user space to kernel space)
 	bytes_not_read = copy_from_user(&userspace, buffer, sizeof(userspace_t));
@@ -123,22 +125,47 @@ static ssize_t device_write(struct file * filep, const char * buffer, size_t len
 		return -EFAULT;
 	}
 
-	// Initialise value of hashing algorithm
+	// Check selected hashing algorithm
 	switch(userspace.algorithm) {
-		case MD5:
+		case HASH_MD5:
+			// Initialise value of hashing algorithm
 			algorithm = crypto_alloc_shash("md5", 0, 0);
+			// Set hash type
+			hash_type = "MD5";
+			// Read 16 bytes for MD5 hashes
+			hash_digest_bytes = 16;
 			break;
-		case SHA1:
+		case HASH_SHA1:
+			// Initialise value of hashing algorithm
 			algorithm = crypto_alloc_shash("sha1", 0, 0);
+			// Set hash type
+			hash_type = "SHA1";
+			// Read 20 bytes for SHA1 hashes
+			hash_digest_bytes = 20;
 			break;
-		case SHA256:
+		case HASH_SHA256:
+			// Initialise value of hashing algorithm
 			algorithm = crypto_alloc_shash("sha256", 0, 0);
+			// Set hash type
+			hash_type = "SHA256";
+			// Read 32 bytes for SHA256 hashes
+			hash_digest_bytes = 32;
 			break;
-		case SHA384:
+		case HASH_SHA384:
+			// Initialise value of hashing algorithm
 			algorithm = crypto_alloc_shash("sha384", 0, 0);
+			// Set hash type
+			hash_type = "SHA384";
+			// Read 48 bytes for SHA384 hashes
+			hash_digest_bytes = 48;
 			break;
-		case SHA512:
+		case HASH_SHA512:
+			// Initialise value of hashing algorithm
 			algorithm = crypto_alloc_shash("sha512", 0, 0);
+			// Set hash type
+			hash_type = "SHA512";
+			// Read 64 bytes for SHA512 hashes
+			hash_digest_bytes = 64;
 			break;
 		default: 
 			// Print to kernel ring buffer for debugging
@@ -197,8 +224,14 @@ static ssize_t device_write(struct file * filep, const char * buffer, size_t len
 	crypto_free_shash(algorithm);
 	// Free dynamically allocated space in kernel memory pool
 	kfree(desc);
-	// Print to kernel ring buffer for debugging
-	pr_info("%s: String successfully hashed. Read from this device to get the result!\n", DEV_NAME);
+
+	// Parse hashes from user and kernel space
+
+	// Print user space data
+	pr_info("%s: Original sentence received from user space = \"%s\"\n", DEV_NAME, userspace.plaintext);
+	pr_info("%s: Hashed sentence received from user space = \"%s\"\n", DEV_NAME, userspace.user_hash_digest);
+	pr_info("%s: Hashing function selected in user space = \"%s\"\n", DEV_NAME, hash_type);
+	pr_info("%s: Hashed sentence in kernel space = \"%s\"\n", DEV_NAME, digest);
 
 	// Return status of write to character device
 	return 0;

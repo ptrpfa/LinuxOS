@@ -4,7 +4,7 @@ ccflags-y += $(C_FLAGS)
 
 all:
 	make -C /lib/modules/$(shell uname -r)/build M=$(PWD) modules
-	$(CC) $(CFLAGS) CSC1107_Group_2_user.c -o client
+	$(CC) $(CFLAGS) CSC1107_Group_2_user.c -lssl -lcrypto -o client
 
 clean:
 	make -C /lib/modules/$(shell uname -r)/build M=$(PWD) clean

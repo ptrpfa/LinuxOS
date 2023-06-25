@@ -26,10 +26,13 @@
 #endif
 
 // Type definition of different enumerated hash types
-typedef enum hash {	MD5, SHA1, SHA256, SHA384, SHA512 } hash_t;
+typedef enum hash {	HASH_MD5, HASH_SHA1, HASH_SHA256, HASH_SHA384, HASH_SHA512 } hash_t;
 
-// Custom struct used to pass two parameters to kernel module
+// Custom struct used to pass multiple parameters to kernel module
 typedef struct userspace {
-	custom_unsigned_integer plaintext[BUF_SIZE];
-	hash_t algorithm;
+	custom_unsigned_integer plaintext[BUF_SIZE];                // Plaintext string
+	hash_t algorithm;                                           // Hashing algorithm
+	custom_unsigned_integer user_hash_digest[BUF_SIZE];         // Hash of plaintext string in user space
+	custom_unsigned_integer kernel_hash_digest[BUF_SIZE];       // Hash of plaintext string in kernel space
+    int comparison_result;                                      // Comparison result of both generated hashes (1: identical, 0: no match)
 } userspace_t;
