@@ -1,23 +1,23 @@
 #include <stdio.h>
 #include "schedule.h"
 
-void swap(Process *a, Process *b) {
+void fcfs_swap(Process *a, Process *b) {
     Process temp = *a;
     *a = *b;
     *b = temp;
 }
 
-void sortProcesses(Process processes[], int num_process) {
+void fcfs_sortProcesses(Process processes[], int num_process) {
     for (int i = 0; i < num_process - 1; i++) {
         for (int j = 0; j < num_process - i - 1; j++) {
             if (processes[j].arrivalTime > processes[j + 1].arrivalTime) {
-                swap(&processes[j], &processes[j + 1]);
+                fcfs_swap(&processes[j], &processes[j + 1]);
             }
         }
     }
 }
 
-void calculate(Process processes[], int num){
+void calculate_for_fcfs(Process processes[], int num){
 
     int currentTime = 0;
 
@@ -35,8 +35,8 @@ void calculate(Process processes[], int num){
 
 void calculate_fcfs(Process processes[], int num){
     
-    sortProcesses(processes, num);
-    calculate(processes, num);
+    fcfs_sortProcesses(processes, num);
+    calculate_for_fcfs(processes, num);
 
 }
 

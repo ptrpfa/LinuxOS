@@ -39,7 +39,6 @@ void calclulate_srtf(Process processes[], int num){
             if (arrived[j] == 1 && rt[j]<minimum && completed[j] != 1){
                     flag = 1;
                     minimum = rt[j];
-                    prev = shortest;
                     shortest = j;
                 };
         }

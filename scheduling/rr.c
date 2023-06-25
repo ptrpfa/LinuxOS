@@ -13,23 +13,23 @@
 // } Process;
 
 
-void swap(Process *a, Process *b) {
+void rr_swap(Process *a, Process *b) {
     Process temp = *a;
     *a = *b;
     *b = temp;
 }
 
-void sortProcesses(Process processes[], int num) {
+void rr_sortProcesses(Process processes[], int num) {
     for (int i = 0; i < num - 1; i++) {
         for (int j = 0; j < num - i - 1; j++) {
             if (processes[j].arrivalTime > processes[j + 1].arrivalTime) {
-                swap(&processes[j], &processes[j + 1]);
+                rr_swap(&processes[j], &processes[j + 1]);
             }
         }
     }
 }
 
-void calculate(Process processes[], int num, int quantum) {
+void calculate_for_rr(Process processes[], int num, int quantum) {
     int rt[num];
     int responseFlag[num];
     int currentTime = 0, finishTime = 0, complete = 0;
@@ -70,8 +70,8 @@ void calculate(Process processes[], int num, int quantum) {
 
 void calculate_rr(Process processes[], int num, int quantam){
 
-    sortProcesses(processes, num);
-    calculate(processes, num, quantam);
+    rr_sortProcesses(processes, num);
+    calculate_for_rr(processes, num, quantam);
 
 }
 
