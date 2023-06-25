@@ -1,14 +1,5 @@
 #include <stdio.h>
-
-typedef struct{
-    int processId;
-    int priorityId;
-    int arrivalTime;
-    int burstTime;
-    int turnaroundTime;
-    int waitingTime;
-    int responseTime;
-} Process;
+#include "schedule.h"
 
 void swap(Process *a, Process *b) {
     Process temp = *a;
@@ -100,27 +91,3 @@ void calculate_fcfs(Process processes[], int num){
 //         }
 //     }
 // }
-
-int main(){
-
-    Process processes[3] = {
-        {1,0,0,2},
-        {2,0,4,7},
-        {3,0,5,6}
-    };
-
-    calculate_fcfs(processes, 3);
-
-    for (int i=0;i<3;i++){
-        printf("PID: %d\n", processes[i].processId);
-        printf("Arrival Time: %d\n", processes[i].arrivalTime);
-        printf("Burst Time: %d\n", processes[i].burstTime);
-        printf("Turnaround time: %d\n", processes[i].turnaroundTime);       
-        printf("Waiting time: %d\n", processes[i].waitingTime);
-        printf("Reponse time: %d\n", processes[i].responseTime);        
-        printf("\n");
-    }
-
-    return 0;
-
-}
