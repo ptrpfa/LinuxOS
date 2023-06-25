@@ -1,17 +1,18 @@
 #include <stdio.h>
 #include <limits.h>
+#include "schedule.h"
 
-typedef struct{
-    int processId;
-    int priorityId;
-    int arrivalTime;
-    int burstTime;
-    int turnaroundTime;
-    int waitingTime;
-    int responseTime;
-} Process;
+// typedef struct{
+//     int processId;
+//     int priorityId;
+//     int arrivalTime;
+//     int burstTime;
+//     int turnaroundTime;
+//     int waitingTime;
+//     int responseTime;
+// } Process;
 
-void calclulate(Process processes[], int num){
+void calclulate_sjf(Process processes[], int num){
 
     int rt[num];
     int arrived[num];
@@ -66,27 +67,27 @@ void calclulate(Process processes[], int num){
 }
 
 
-int main(){
+// int main(){
 
-    Process processes[4] = {
-        {1,0,2,4},
-        {2,0,3,3},
-        {3,0,3,5},
-        {4,0,2,2},
-    };
+//     Process processes[4] = {
+//         {1,0,2,4},
+//         {2,0,3,3},
+//         {3,0,3,5},
+//         {4,0,2,2},
+//     };
 
-    calclulate(processes, 4);
+//     calclulate(processes, 4);
 
-    for (int i=0;i<4;i++){
-        printf("PID: %d\n", processes[i].processId);
-        printf("Arrival Time: %d\n", processes[i].arrivalTime);
-        printf("Burst Time: %d\n", processes[i].burstTime);
-        printf("Turnaround time: %d\n", processes[i].turnaroundTime);    
-        printf("Waiting time: %d\n", processes[i].waitingTime);
-        printf("Reponse time: %d\n", processes[i].responseTime);   
-        printf("\n");
-    }
+//     for (int i=0;i<4;i++){
+//         printf("PID: %d\n", processes[i].processId);
+//         printf("Arrival Time: %d\n", processes[i].arrivalTime);
+//         printf("Burst Time: %d\n", processes[i].burstTime);
+//         printf("Turnaround time: %d\n", processes[i].turnaroundTime);    
+//         printf("Waiting time: %d\n", processes[i].waitingTime);
+//         printf("Reponse time: %d\n", processes[i].responseTime);   
+//         printf("\n");
+//     }
 
-    return 0;
+//     return 0;
 
-}
+// }

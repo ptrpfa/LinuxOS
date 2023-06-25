@@ -1,17 +1,18 @@
 #include <stdio.h>
 #include <limits.h>
+#include "schedule.h"
 
-typedef struct{
-    int processId;
-    int priorityId;
-    int arrivalTime;
-    int burstTime;
-    int turnaroundTime;
-    int waitingTime;
-    int responseTime;
-} Process;
+// typedef struct{
+//     int processId;
+//     int priorityId;
+//     int arrivalTime;
+//     int burstTime;
+//     int turnaroundTime;
+//     int waitingTime;
+//     int responseTime;
+// } Process;
 
-void calculate(Process processes[], int num, int quantam){
+void calculate_priority(Process processes[], int num, int quantam){
 
     int rt[num];
     int arrived[num];
@@ -96,28 +97,28 @@ void calculate(Process processes[], int num, int quantam){
     }
 }
 
-int main(){
+// int main(){
 
-    Process processes[5] = {
-        {1,3,0,4},
-        {2,2,0,5},
-        {3,2,0,8},
-        {4,1,0,7},
-        {5,3,0,3},
-    };
+//     Process processes[5] = {
+//         {1,3,0,4},
+//         {2,2,0,5},
+//         {3,2,0,8},
+//         {4,1,0,7},
+//         {5,3,0,3},
+//     };
 
-    calculate(processes, 5, 2);
+//     calculate(processes, 5, 2);
 
-    for (int i=0;i<5;i++){
-        printf("PID: %d\n", processes[i].processId);
-        printf("Arrival Time: %d\n", processes[i].arrivalTime);
-        printf("Burst Time: %d\n", processes[i].burstTime);
-        printf("Turnaround time: %d\n", processes[i].turnaroundTime);       
-        printf("Waiting time: %d\n", processes[i].waitingTime);
-        printf("Reponse time: %d\n", processes[i].responseTime);        
-        printf("\n");
-    }
+//     for (int i=0;i<5;i++){
+//         printf("PID: %d\n", processes[i].processId);
+//         printf("Arrival Time: %d\n", processes[i].arrivalTime);
+//         printf("Burst Time: %d\n", processes[i].burstTime);
+//         printf("Turnaround time: %d\n", processes[i].turnaroundTime);       
+//         printf("Waiting time: %d\n", processes[i].waitingTime);
+//         printf("Reponse time: %d\n", processes[i].responseTime);        
+//         printf("\n");
+//     }
 
-    return 0;
+//     return 0;
 
-}
+// }
