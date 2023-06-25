@@ -91,16 +91,16 @@ static ssize_t device_read(struct file * filep, char * buffer, size_t len, loff_
 		bytes_to_read = 0;
 	}
 
-	// Read bytes from character device (read data from kernel space to user space)
+	// Read hash results from character device (read data from kernel space to user space)
 	if(copy_to_user(buffer, digest, bytes_to_read)) { // Check for errors during read operation
 		// Print to kernel ring buffer for debugging
-		pr_warn("%s: Failed to send result to userspace\n", DEV_NAME);
+		pr_warn("%s: Failed to send hash result to userspace\n", DEV_NAME);
 		// Return value of error condition
 		return -EFAULT;
 	}
 	else {
 		// Print to kernel ring buffer for debugging
-		pr_info("%s: Successfully read from character device!\n", DEV_NAME);
+		pr_info("%s: Successfully read hash result from character device!\n", DEV_NAME);
     	// Return status of read from character device
 		return 0;
 	}
@@ -198,7 +198,7 @@ static ssize_t device_write(struct file * filep, const char * buffer, size_t len
 	// Free dynamically allocated space in kernel memory pool
 	kfree(desc);
 	// Print to kernel ring buffer for debugging
-	pr_info("%s: String successfully hashed. Read from this device to get the result\n", DEV_NAME);
+	pr_info("%s: String successfully hashed. Read from this device to get the result!\n", DEV_NAME);
 
 	// Return status of write to character device
 	return 0;
@@ -211,6 +211,7 @@ static ssize_t device_write(struct file * filep, const char * buffer, size_t len
 		kfree(desc);
 		// Return value of error condition
 		return err;
+		
 }
 
 /* Module Specifications */

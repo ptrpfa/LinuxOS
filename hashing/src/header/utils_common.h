@@ -15,6 +15,7 @@
 
 // Buffer size
 #define BUF_SIZE 1024                               // Size of plaintext buffer (1MB)
+#define TYPE_SIZE 8                                 // Size of hash type (8 bytes)
 
 /* Type & Struct Definitions */
 // Conditional type definition depending on program type (user or kernel)
