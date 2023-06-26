@@ -2,11 +2,103 @@
 #include <limits.h>
 #include "Schedule.h"
 
+void printTable(Process processes[6]){
+
+    char headers[4][20] = {
+        "Process ID",
+        "Arrival Time",
+        "Burst Time",
+        "Priority"
+    };
+
+    int table[6][4];
+
+    for (int i = 0; i < 6; i++)
+    {
+        int j = 0;
+
+        table[i][j] = processes[i].processId;
+        table[i][j+1] = processes[i].arrivalTime;
+        table[i][j+2] = processes[i].burstTime;
+        table[i][j+3] = processes[i].priorityId;
+        
+    }
+    
+
+    // Print the top border
+    printf("%c", 218); // Top-left corner
+    for (int i = 0; i < 4; i++) {
+        for (int j = 0; j < 20; j++) {
+            printf("%c", 196); // Horizontal line
+        }
+        if (i != 3) {
+            printf("%c", 194); // Intersection
+        }
+    }
+    printf("%c\n", 191); // Top-right corner
+
+    // Print the headers
+    printf("%c", 179); // Vertical line
+    for (int i = 0; i < 4; i++) {
+        printf("%-20s%c", headers[i], 179); // Header and vertical line
+    }
+    printf("\n");
+
+    // Print the header-row separator
+    printf("%c", 195); // Left T-intersection
+    for (int i = 0; i < 4; i++) {
+        for (int j = 0; j < 20; j++) {
+            printf("%c", 196); // Horizontal line
+        }
+        if (i != 3) {
+            printf("%c", 197); // T-intersection
+        }
+    }
+    printf("%c\n", 180); // Right T-intersection
+
+    // Print the table data
+    for (int i = 0; i < 6; i++) {
+        printf("%c", 179); // Vertical line
+        for (int j = 0; j < 4; j++) {
+            printf("%-20d%c", table[i][j], 179); // Data and vertical line
+        }
+        printf("\n");
+
+        if (i != 5) {
+            printf("%c", 195); // Left T-intersection
+            for (int j = 0; j < 4; j++) {
+                for (int k = 0; k < 20; k++) {
+                    printf("%c", 196); // Horizontal line
+                }
+                if (j != 3) {
+                    printf("%c", 197); // T-intersection
+                }
+            }
+            printf("%c\n", 180); // Right T-intersection
+        }
+    }
+
+    // Print the bottom border
+    printf("%c", 192); // Bottom-left corner
+    for (int i = 0; i < 4; i++) {
+        for (int j = 0; j < 20; j++) {
+            printf("%c", 196); // Horizontal line
+        }
+        if (i != 3) {
+            printf("%c", 193); // Intersection
+        }
+    }
+    printf("%c\n", 217); // Bottom-right corner
+
+}
+
 void setup(Process fcfs_processes[], Process sjf_processes[], Process srtf_processes[], Process rr_processes[], Process priority_processes[], int num){
 
     Process processes[6];
 
     initializeProcesses(processes, num);
+
+    printTable(processes);
 
     // for (int i = 0; i < num; i++)
     // {
@@ -86,23 +178,19 @@ int main(){
                 break;
             case 2:
                 printf("You chose SJF\n");
-                // Add code for SJF scheduling algorithm here
                 break;
             case 3:
                 printf("You chose SRTF\n");
-                // Add code for SRTF scheduling algorithm here
                 break;
             case 4:
                 printf("You chose RR\n");
-                // Add code for RR scheduling algorithm here
                 break;
             case 5:
                 printf("You chose Priority\n");
-                // Add code for Priority scheduling algorithm here
                 break;
             case 6:
                 printf("Quitting program...\n");
-                return 0; // Exit the program
+                return 0;
         }
     }
     return 0;
