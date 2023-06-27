@@ -104,7 +104,8 @@ echo -e "\n21) Last 3 messages of kernel log buffer:"
 dmesg | tail -n 3
 
 # 22) Delete the user CSC1107_Group_2 from the OS of your Raspberry Pi. 
-sudo deluser CSC1107_Group_2
+sudo deluser $NEW_USER
+sudo rm -rf /home/CSC1107_Group_2
 echo -e "\n22) Successfully deleted user"
 
 # 23) Display if the line containing the new user CSC1107_Group_2 is still in the file /etc/passwd on the screen using the grep command. If return nothing, it means the user name is deleted successfully. 
