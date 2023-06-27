@@ -19,7 +19,7 @@
     Observe the updates in the kernel ring buffer.
 6. Run the user client program using the following command:
     ```
-    sudo ./client
+    sudo ./CSC1107_Group_2_user
     ```
     Enter your hashing algorithm of choice and try to play around with the program. Observe the updates int he kernel ring buffer as well.
 7. To clean up, run the following commands:
