@@ -8,4 +8,4 @@ all:
 
 clean:
 	make -C /lib/modules/$(shell uname -r)/build M=$(PWD) clean
-	rm client
+	rm CSC1107_Group_2_user
