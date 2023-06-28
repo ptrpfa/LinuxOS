@@ -1,5 +1,6 @@
     #include <stdio.h>
     #include <limits.h>
+    #define SIZE 100
 
     typedef struct{
         int processId;
@@ -12,31 +13,45 @@
     } Process;
 
     void print_gantt(int gantt[], int ganttSize){
-        for (int i = 0; i < ganttSize; i++)
-        {
-            printf("--");
-        }
-        printf("\n");
+
+        printf("|");
         for (int i = 0; i < ganttSize; i++)
         {
             int current = gantt[i];
             int next = gantt[i+1];
-            printf("%d", current);
             if (current != next)
             {
-                printf("|");
+                printf("---|");
             }
             else
             {
-                printf(" ");
+                printf("---");
             }
             
         }
         printf("\n");
+        printf("0");
         for (int i = 0; i < ganttSize; i++)
         {
-            printf("--");
+            int current = gantt[i];
+            int next = gantt[i+1];
+            if (current != next)
+            {   
+                if (i>9)
+                {
+                    printf("  %d",i+1);
+                }
+                else
+                {
+                    printf("   %d",i+1);
+                }
+            }
+            else
+            {
+                printf("   ");
+            }
         }
+        
     }
 
     void calclulate(Process processes[], int num){
@@ -45,8 +60,14 @@
         int arrived[num];
         int completed[num];
         int flag = 0, shortest = -1, currentTime = 0, minimum = INT_MAX, finishTime = 0, complete = 0, occupied = 0, responseTime = 0;
-        int gantt[1000]; // assuming the total time will not exceed 1000
+        int gantt[SIZE]; // assuming the total time will not exceed 1000
         int ganttSize = 0;
+
+        for (int i = 0; i < SIZE; i++)
+        {
+            gantt[i] = 0;
+        }
+        
 
         for (int i = 0;i<num;i++){
             rt[i] = processes[i].burstTime;
