@@ -92,13 +92,13 @@ void printTable(Process processes[6]){
 
 }
 
-void setup(Process fcfs_processes[], Process sjf_processes[], Process srtf_processes[], Process rr_processes[], Process priority_processes[], int num){
+void setup(Process processes[], Process fcfs_processes[], Process sjf_processes[], Process srtf_processes[], Process rr_processes[], Process priority_processes[], int num){
 
-    Process processes[6];
+    // Process processes[6];
 
-    initializeProcesses(processes, num);
+    // initializeProcesses(processes, num);
 
-    printTable(processes);
+    // printTable(processes);
 
     // for (int i = 0; i < num; i++)
     // {
@@ -140,10 +140,24 @@ void setup(Process fcfs_processes[], Process sjf_processes[], Process srtf_proce
 
 }
 
+void printInfo(Process processes[], int num){
+
+    int sum, average;
+    for (int i = 0; i < 6; i++)
+    {
+        sum += processes[i].waitingTime;
+    }
+    average = sum/num;
+    printf("Average waiting time = %d\n", average);
+    
+}
+
 int main(){
 
     int choice;
     int num = 6;
+
+    Process processes[6];
     Process fcfs_processes[6];
     Process sjf_processes[6];
     Process srtf_processes[6];
@@ -170,11 +184,23 @@ int main(){
             printf("\n");
         }
 
-        setup(fcfs_processes, sjf_processes, srtf_processes, rr_processes, priority_processes, num);
+        initializeProcesses(processes, num);
+        setup(processes, fcfs_processes, sjf_processes, srtf_processes, rr_processes, priority_processes, num);
 
         switch(choice) {
             case 1:
                 printf("You chose FCFS\n");
+                // printTable(processes);
+                // calculate_fcfs(fcfs_processes, num);
+                // calclulate_sjf(sjf_processes, num);
+                // calclulate_srtf(srtf_processes, num);
+                // calculate_rr(rr_processes, num, 5);
+                // calculate_priority(priority_processes, num, 5);
+                // printInfo(fcfs_processes, num);
+                // printInfo(sjf_processes, num);
+                // printInfo(srtf_processes, num);
+                // printInfo(rr_processes, num);
+                // printInfo(priority_processes, num);
                 break;
             case 2:
                 printf("You chose SJF\n");

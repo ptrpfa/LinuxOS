@@ -42,8 +42,8 @@ void initializeProcesses(Process processes[], int num){
 
         int burstTime;
         do{
-            burstTime = rand() % 8 + 3;
-        } while (burstCount[burstTime - 3] >= 3);
+            burstTime = rand() % 8 + 1;
+        } while (burstCount[burstTime - 1] >= 3);
 
         processes[i].burstTime = burstTime;
         burstCount[burstTime - 3]++;
