@@ -140,7 +140,7 @@ void setup(Process processes[], Process fcfs_processes[], Process sjf_processes[
 
 }
 
-void printInfo(Process processes[], Algo algo, int num, char type[]){
+void printInfo(Process processes[], Algo *algo, int num, char type[]){
 
     int turnaround_sum = 0, waiting_sum = 0, response_sum = 0;
     for (int i = 0; i < 6; i++)
@@ -150,21 +150,21 @@ void printInfo(Process processes[], Algo algo, int num, char type[]){
         response_sum += processes[i].responseTime;
 
     }
-    algo.turnaround_average = (float)turnaround_sum/num;
-    algo.waiting_average = (float)waiting_sum/num;
-    algo.response_average = (float)response_sum/num;
+    algo->turnaround_average = (float)turnaround_sum / num;
+    algo->waiting_average = (float)waiting_sum / num;
+    algo->response_average = (float)response_sum / num;
     printf("%s processes\n", type);
     for (int i = 0; i < num; i++)
     {
         printf("PID: %d Turnover Time: %d Waiting Time: %d Response Time: %d\n", processes[i].processId, processes[i].turnaroundTime, processes[i].waitingTime, processes[i].responseTime);
     }
-    printf("Average turnaround time for %s = %.2f\n", type, algo.turnaround_average);
-    printf("Average waiting time for %s = %.2f\n", type, algo.waiting_average);
-    printf("Average response time for %s = %.2f\n", type, algo.response_average);
+    printf("Average turnaround time for %s = %.2f\n", type, algo->turnaround_average);
+    printf("Average waiting time for %s = %.2f\n", type, algo->waiting_average);
+    printf("Average response time for %s = %.2f\n", type, algo->response_average);
     printf("\n");
 }
 
-void calculate_algo(Process processes[], Process fcfs_processes[], Process sjf_processes[], Process srtf_processes[], Process rr_processes[], Process priority_processes[], Algo fcfs_algo, Algo sjf_algo, Algo srtf_algo, Algo rr_algo, Algo priority_algo, int num){
+void calculate_algo(Process processes[], Process fcfs_processes[], Process sjf_processes[], Process srtf_processes[], Process rr_processes[], Process priority_processes[], Algo *fcfs_algo, Algo *sjf_algo, Algo *srtf_algo, Algo *rr_algo, Algo *priority_algo, int num){
 
     calculate_fcfs(fcfs_processes, num);
     calclulate_sjf(sjf_processes, num);
@@ -224,7 +224,9 @@ int main(){
                 initializeProcesses(processes, num);
                 setup(processes, fcfs_processes, sjf_processes, srtf_processes, rr_processes, priority_processes, num);
                 printTable(processes);
-                calculate_algo(processes, fcfs_processes, sjf_processes, srtf_processes, rr_processes, priority_processes, fcfs_algo, sjf_algo, srtf_algo, rr_algo, priority_algo, num);
+                calculate_algo(processes, fcfs_processes, sjf_processes, srtf_processes, rr_processes, priority_processes, &fcfs_algo, &sjf_algo, &srtf_algo, &rr_algo, &priority_algo, num);
+                checkFastestAlgorithms(&fcfs_algo, &sjf_algo, &srtf_algo, &rr_algo, &priority_algo);
+                printing(fcfs_processes, sjf_processes, srtf_processes, rr_processes, priority_processes, &fcfs_algo, &sjf_algo, &srtf_algo, &rr_algo, &priority_algo, num);
                 break;
             case 2:
                 printf("You chose SJF\n");

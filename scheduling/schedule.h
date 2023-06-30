@@ -1,7 +1,9 @@
 #ifndef MY_FUNCTIONS_H   // Include guard
 #define MY_FUNCTIONS_H
 
-#include <stdio.h>  // Includes other header files needed
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 #include <limits.h>
 
 // Structure definitions
@@ -28,5 +30,8 @@ void calclulate_sjf(Process processes[], int num);
 void calclulate_srtf(Process processes[], int num);
 void calculate_rr(Process processes[], int num, int quantam);
 void calculate_priority(Process processes[], int num);
+void checkFastestAlgorithms(Algo *fcfs_algo, Algo *sjf_algo, Algo *srtf_algo, Algo *rr_algo, Algo *priority_algo);
+void checkFastestAlgorithms_file(FILE *file, Algo *fcfs_algo, Algo *sjf_algo, Algo *srtf_algo, Algo *rr_algo, Algo *priority_algo);
+void printing(Process fcfs_processes[], Process sjf_processes[], Process srtf_processes[], Process rr_processes[], Process priority_processes[], Algo *fcfs_algo, Algo *sjf_algo, Algo *srtf_algo, Algo *rr_algo, Algo *priority_algo, int num);
 
 #endif /* MY_FUNCTIONS_H */
