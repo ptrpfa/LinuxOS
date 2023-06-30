@@ -36,11 +36,13 @@ void calclulate_srtf(Process processes[], int num){
         }
 
         for (int j = 0;j<num;j++){
-            if (arrived[j] == 1 && rt[j]<minimum && completed[j] != 1){
+            if (arrived[j] == 1 && completed[j] != 1){
+                if (shortest == -1 || rt[j] < minimum || (rt[j] == minimum && processes[j].arrivalTime < processes[shortest].arrivalTime)){
                     flag = 1;
                     minimum = rt[j];
                     shortest = j;
-                };
+                }
+            }
         }
 
         if (flag == 1){

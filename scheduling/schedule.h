@@ -27,6 +27,6 @@ void calculate_fcfs(Process processes[], int num);
 void calclulate_sjf(Process processes[], int num);
 void calclulate_srtf(Process processes[], int num);
 void calculate_rr(Process processes[], int num, int quantam);
-void calculate_priority(Process processes[], int num, int quantam);
+void calculate_priority(Process processes[], int num);
 
 #endif /* MY_FUNCTIONS_H */

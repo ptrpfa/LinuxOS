@@ -34,12 +34,14 @@ void calclulate_sjf(Process processes[], int num){
         }
 
         for (int j = 0;j<num;j++){
-            if (arrived[j] == 1 && rt[j]<minimum && completed[j] != 1 && occupied == 0){
+            if (arrived[j] == 1 && completed[j] != 1 && occupied == 0){
+                if (shortest == -1 || rt[j] < minimum || (rt[j] == minimum && processes[j].arrivalTime < processes[shortest].arrivalTime)){
                     flag = 1;
                     minimum = rt[j];
                     shortest = j;
                     responseTime = currentTime;
-                };
+                }
+            }
         }
 
         if (flag == 1){

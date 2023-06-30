@@ -1,16 +1,16 @@
 #include <stdio.h>
 #include <limits.h>
-#include "schedule.h"
 
-// typedef struct{
-//     int processId;
-//     int priorityId;
-//     int arrivalTime;
-//     int burstTime;
-//     int turnaroundTime;
-//     int waitingTime;
-//     int responseTime;
-// } Process;
+typedef struct{
+    int processId;
+    int priorityId;
+    int arrivalTime;
+    int burstTime;
+    int turnaroundTime;
+    int waitingTime;
+    int responseTime;
+    int finishTime;
+} Process;
 
 
 void rr_swap(Process *a, Process *b) {
@@ -56,6 +56,7 @@ void calculate_for_rr(Process processes[], int num, int quantum) {
                     currentTime += rt[j];
                     rt[j] = 0;
                     finishTime = currentTime;
+                    processes[j].finishTime = finishTime;
                     processes[j].turnaroundTime = finishTime - processes[j].arrivalTime;
                     processes[j].waitingTime = processes[j].turnaroundTime - processes[j].burstTime;
                     complete++;
@@ -75,27 +76,30 @@ void calculate_rr(Process processes[], int num, int quantam){
 
 }
 
-// int main(){
+int main(){
 
-//     Process processes[3] = {
-//         {1,0,0,24},
-//         {2,0,0,3},
-//         {3,0,0,3},
-//     };
+    Process processes[6] = {
+        {1,0,7,4},
+        {2,0,1,1},
+        {3,0,2,5},
+        {4,0,7,4},
+        {5,0,2,1},
+        {6,0,4,3},
+    };
 
-//     sortProcesses(processes, 3);
-//     calculate(processes, 3, 4);
+    calculate_rr(processes, 6, 5);
 
-//     for (int i=0;i<3;i++){
-//         printf("PID: %d\n", processes[i].processId);
-//         printf("Arrival Time: %d\n", processes[i].arrivalTime);
-//         printf("Burst Time: %d\n", processes[i].burstTime);
-//         printf("Turnaround time: %d\n", processes[i].turnaroundTime);       
-//         printf("Waiting time: %d\n", processes[i].waitingTime);
-//         printf("Reponse time: %d\n", processes[i].responseTime);        
-//         printf("\n");
-//     }
+    for (int i=0;i<6;i++){
+        printf("PID: %d\n", processes[i].processId);
+        printf("Arrival Time: %d\n", processes[i].arrivalTime);
+        printf("Burst Time: %d\n", processes[i].burstTime);
+        printf("Turnaround time: %d\n", processes[i].turnaroundTime);       
+        printf("Waiting time: %d\n", processes[i].waitingTime);
+        printf("Reponse time: %d\n", processes[i].responseTime);        
+        printf("Finish time: %d\n", processes[i].finishTime);
+        printf("\n");
+    }
 
-//     return 0;
+    return 0;
 
-// }
+}

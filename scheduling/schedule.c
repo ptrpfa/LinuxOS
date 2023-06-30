@@ -170,7 +170,7 @@ void calculate_algo(Process processes[], Process fcfs_processes[], Process sjf_p
     calclulate_sjf(sjf_processes, num);
     calclulate_srtf(srtf_processes, num);
     calculate_rr(rr_processes, num, 5);
-    calculate_priority(priority_processes, num, 5);
+    calculate_priority(priority_processes, num);
 
     printInfo(fcfs_processes, fcfs_algo, num, "FCFS");
     printInfo(sjf_processes, sjf_algo, num, "SJF");

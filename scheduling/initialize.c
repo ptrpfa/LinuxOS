@@ -26,8 +26,8 @@ void initializeProcesses(Process processes[], int num){
 
         int priorityId;
         do{
-            priorityId = rand() % 6 + 1;
-        } while (priorityCount[priorityId - 1] >= 1);
+            priorityId = rand() % 4 + 1;
+        } while (priorityCount[priorityId - 1] >= 2);
 
         processes[i].priorityId = priorityId;
         priorityCount[priorityId - 1]++;
@@ -35,7 +35,7 @@ void initializeProcesses(Process processes[], int num){
         int arrivalTime;
         do {
             arrivalTime = rand() % 9;
-        } while (arrivalCount[arrivalTime] >= 3); 
+        } while (arrivalCount[arrivalTime] >= 2); 
 
         processes[i].arrivalTime = arrivalTime;
         arrivalCount[arrivalTime]++;
