@@ -26,6 +26,7 @@ void calculate_for_fcfs(Process processes[], int num){
         while (currentTime < processes[i].arrivalTime){
             currentTime++;
         }
+        processes[i].responseTime = currentTime - processes[i].arrivalTime;
         currentTime += processes[i].burstTime;
         processes[i].turnaroundTime = currentTime - processes[i].arrivalTime;
         processes[i].waitingTime = processes[i].turnaroundTime - processes[i].burstTime;

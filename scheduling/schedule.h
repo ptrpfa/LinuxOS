@@ -15,6 +15,12 @@ typedef struct{
     int responseTime;
 } Process;
 
+typedef struct{
+    float turnaround_average;
+    float waiting_average;
+    float response_average;
+} Algo;
+
 // Function prototypes
 void initializeProcesses(Process processes[], int num);
 void calculate_fcfs(Process processes[], int num);
