@@ -94,7 +94,7 @@ void printTable(Process processes[6]){
 
 void setup(Process processes[], Process fcfs_processes[], Process sjf_processes[], Process srtf_processes[], Process rr_processes[], Process priority_processes[], int num){
 
-
+    //Assign each processes processId, arrival time, burst time and priorityId to the generated values from the base struct
     for (int i = 0; i < num; i++)
     {
         fcfs_processes[i].processId = processes[i].processId;
@@ -129,6 +129,7 @@ void setup(Process processes[], Process fcfs_processes[], Process sjf_processes[
 void printInfo(Process processes[], Algo *algo, int num, char type[]){
 
     int turnaround_sum = 0, waiting_sum = 0, response_sum = 0;
+    //Calculation of the total turnaround, waiting and response time for the set of processes passed into the arguments
     for (int i = 0; i < 6; i++)
     {
         turnaround_sum += processes[i].turnaroundTime;
@@ -136,14 +137,18 @@ void printInfo(Process processes[], Algo *algo, int num, char type[]){
         response_sum += processes[i].responseTime;
 
     }
+    //Calculate the average timings and assign them into the struct that will hold information on the performance of an algorithm
     algo->turnaround_average = (float)turnaround_sum / num;
     algo->waiting_average = (float)waiting_sum / num;
     algo->response_average = (float)response_sum / num;
+    //Print the type of algo
     printf("%s processes\n", type);
+    //Print the details of each process
     for (int i = 0; i < num; i++)
     {
         printf("PID: %d Turnaround Time: %d Waiting Time: %d Response Time: %d\n", processes[i].processId, processes[i].turnaroundTime, processes[i].waitingTime, processes[i].responseTime);
     }
+    //Print the performance details of the algo
     printf("Average turnaround time for %s = %.2f\n", type, algo->turnaround_average);
     printf("Average waiting time for %s = %.2f\n", type, algo->waiting_average);
     printf("Average response time for %s = %.2f\n", type, algo->response_average);
@@ -152,6 +157,10 @@ void printInfo(Process processes[], Algo *algo, int num, char type[]){
 
 void calculate_algo(Process processes[], Process fcfs_processes[], Process sjf_processes[], Process srtf_processes[], Process rr_processes[], Process priority_processes[], Algo *fcfs_algo, Algo *sjf_algo, Algo *srtf_algo, Algo *rr_algo, Algo *priority_algo, int num){
 
+    //Perform function call for each algo for calculation by passing each struct array into each specific function
+    //Each function will ammend each process in the struct array and calculate the turnaround, waiting and response for each process
+    //Each process struct will have the updated turnaround, waiting and response time after the function call
+    //Inoke printInfo to print the details of set of process
     printf("FCFS gantt chart\n");
     calculate_fcfs(fcfs_processes, num);
     printInfo(fcfs_processes, fcfs_algo, num, "FCFS");
@@ -172,9 +181,11 @@ void calculate_algo(Process processes[], Process fcfs_processes[], Process sjf_p
 
 int main(){
 
+    //Initialize choice and number of processes into variables
     int choice;
     int num = 6;
 
+    //Initialize structs
     Process processes[6];
     Process fcfs_processes[6];
     Process sjf_processes[6];
@@ -188,8 +199,11 @@ int main(){
     Algo rr_algo;
     Algo priority_algo;
 
+    //Print program main menu
     printf("Welcome to CSC1107OS scheduling algorithm program!\n");
     printf("--------------------------------------------------\n");
+
+    //Start of while loop to keep main menu running until quit
     while(1){
         printf("Please select an option\n");
         printf("1) FCFS\n");
@@ -200,20 +214,20 @@ int main(){
         printf("6) Quit\n");
         printf("Enter an option: ");
 
-        scanf("%d", &choice);
+        scanf("%d", &choice); //Read user input
 
-        while(choice < 1 || choice > 6){
+        while(choice < 1 || choice > 6){ //Check user input, if invalid input prompt user
             printf("Invalid input! Please enter a number between 1 and 6: ");
-            scanf("%d", &choice);
+            scanf("%d", &choice); //Read user input again
             printf("\n");
         }
 
         switch(choice) {
             case 1:
                 printf("You chose FCFS\n");
-                initializeProcesses(processes, num);
-                setup(processes, fcfs_processes, sjf_processes, srtf_processes, rr_processes, priority_processes, num);
-                printTable(processes);
+                initializeProcesses(processes, num); //Initialize base process struct with a set of values that will allow the chosen algo to win
+                setup(processes, fcfs_processes, sjf_processes, srtf_processes, rr_processes, priority_processes, num); //Assign base process generated values into all the algos
+                printTable(processes); //Print the table to show generated burst, arrival, priority and quantam
                 calculate_algo(processes, fcfs_processes, sjf_processes, srtf_processes, rr_processes, priority_processes, &fcfs_algo, &sjf_algo, &srtf_algo, &rr_algo, &priority_algo, num);
                 checkFastestAlgorithms(&fcfs_algo, &sjf_algo, &srtf_algo, &rr_algo, &priority_algo);
                 printing(fcfs_processes, sjf_processes, srtf_processes, rr_processes, priority_processes, &fcfs_algo, &sjf_algo, &srtf_algo, &rr_algo, &priority_algo, num);
