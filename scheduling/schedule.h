@@ -5,6 +5,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <limits.h>
+#define MAX_SIZE 100
 
 // Structure definitions
 typedef struct{
@@ -24,6 +25,7 @@ typedef struct{
 } Algo;
 
 // Function prototypes
+void draw_gantt(int gantt[], int size);
 void initializeProcesses(Process processes[], int num);
 void calculate_fcfs(Process processes[], int num);
 void calclulate_sjf(Process processes[], int num);

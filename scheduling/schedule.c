@@ -166,16 +166,20 @@ void printInfo(Process processes[], Algo *algo, int num, char type[]){
 
 void calculate_algo(Process processes[], Process fcfs_processes[], Process sjf_processes[], Process srtf_processes[], Process rr_processes[], Process priority_processes[], Algo *fcfs_algo, Algo *sjf_algo, Algo *srtf_algo, Algo *rr_algo, Algo *priority_algo, int num){
 
+    printf("FCFS gantt chart\n");
     calculate_fcfs(fcfs_processes, num);
-    calclulate_sjf(sjf_processes, num);
-    calclulate_srtf(srtf_processes, num);
-    calculate_rr(rr_processes, num, 5);
-    calculate_priority(priority_processes, num);
-
     printInfo(fcfs_processes, fcfs_algo, num, "FCFS");
+    printf("SJF gantt chart\n");
+    calclulate_sjf(sjf_processes, num);
     printInfo(sjf_processes, sjf_algo, num, "SJF");
+    printf("SRTF gantt chart\n");
+    calclulate_srtf(srtf_processes, num);
     printInfo(srtf_processes, srtf_algo, num, "SRTF");
+    printf("RR gantt chart\n");
+    calculate_rr(rr_processes, num, 5);
     printInfo(rr_processes, rr_algo, num, "RR");
+    printf("PRIORITY gantt chart\n");
+    calculate_priority(priority_processes, num);
     printInfo(priority_processes, priority_algo, num, "PRIORITY");
 
 }

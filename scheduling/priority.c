@@ -21,6 +21,14 @@ void calculate_priority(Process processes[], int num){
     int responded[num];
     int flag = 0, priorityIndex = -1, currentTime = 0, lowest_priority = INT_MAX, finishTime = 0, complete = 0, responseTime = 0;
 
+    int ganttBar[100];
+    int ganttCount = 0;
+
+    for (int i = 0; i < 100; i++)
+    {
+        ganttBar[i] = 0;
+    }
+
     for (int i = 0;i<num;i++){
         rt[i] = processes[i].burstTime;
         priority[i] = processes[i].priorityId;
@@ -54,6 +62,8 @@ void calculate_priority(Process processes[], int num){
             responded[priorityIndex] = 1;
             }
             rt[priorityIndex]--;
+            ganttBar[ganttCount] = priorityIndex + 1;
+            ganttCount++;
             currentTime++;
             if (rt[priorityIndex] == 0){
                 complete++;
@@ -68,9 +78,13 @@ void calculate_priority(Process processes[], int num){
             }
         }
         else{
+            ganttCount++;
             currentTime++;
         }
     }
+
+    draw_gantt(ganttBar, ganttCount);
+    printf("\n");
 }
 
 // void calculate_priority(Process processes[], int num, int quantam){

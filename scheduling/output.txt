@@ -1,64 +1,64 @@
 FCFS processes
-PID: 2 Turnover Time: 8 Waiting Time: 0 Response Time: 0
-PID: 6 Turnover Time: 14 Waiting Time: 8 Response Time: 8
-PID: 5 Turnover Time: 16 Waiting Time: 10 Response Time: 10
-PID: 3 Turnover Time: 20 Waiting Time: 14 Response Time: 14
-PID: 1 Turnover Time: 26 Waiting Time: 19 Response Time: 19
-PID: 4 Turnover Time: 34 Waiting Time: 26 Response Time: 26
-Average turnaround time for FCFS = 19.67
-Average waiting time for FCFS = 12.83
-Average response time for FCFS = 12.83
+PID: 1 Turnover Time: 3 Waiting Time: 0 Response Time: 0
+PID: 3 Turnover Time: 10 Waiting Time: 2 Response Time: 2
+PID: 6 Turnover Time: 15 Waiting Time: 10 Response Time: 10
+PID: 2 Turnover Time: 21 Waiting Time: 14 Response Time: 14
+PID: 4 Turnover Time: 27 Waiting Time: 19 Response Time: 19
+PID: 5 Turnover Time: 30 Waiting Time: 26 Response Time: 26
+Average turnaround time for FCFS = 17.67
+Average waiting time for FCFS = 11.83
+Average response time for FCFS = 11.83
 
 SJF processes
-PID: 1 Turnover Time: 18 Waiting Time: 11 Response Time: 11
-PID: 2 Turnover Time: 33 Waiting Time: 25 Response Time: 25
-PID: 3 Turnover Time: 12 Waiting Time: 6 Response Time: 6
-PID: 4 Turnover Time: 34 Waiting Time: 26 Response Time: 26
-PID: 5 Turnover Time: 8 Waiting Time: 2 Response Time: 2
-PID: 6 Turnover Time: 6 Waiting Time: 0 Response Time: 0
-Average turnaround time for SJF = 18.50
-Average waiting time for SJF = 11.67
-Average response time for SJF = 11.67
+PID: 1 Turnover Time: 3 Waiting Time: 0 Response Time: 0
+PID: 2 Turnover Time: 17 Waiting Time: 10 Response Time: 10
+PID: 3 Turnover Time: 26 Waiting Time: 18 Response Time: 18
+PID: 4 Turnover Time: 31 Waiting Time: 23 Response Time: 23
+PID: 5 Turnover Time: 7 Waiting Time: 3 Response Time: 3
+PID: 6 Turnover Time: 7 Waiting Time: 2 Response Time: 2
+Average turnaround time for SJF = 15.17
+Average waiting time for SJF = 9.33
+Average response time for SJF = 9.33
 
 SRTF processes
-PID: 1 Turnover Time: 18 Waiting Time: 11 Response Time: 11
-PID: 2 Turnover Time: 33 Waiting Time: 25 Response Time: 25
-PID: 3 Turnover Time: 12 Waiting Time: 6 Response Time: 6
-PID: 4 Turnover Time: 34 Waiting Time: 26 Response Time: 26
-PID: 5 Turnover Time: 8 Waiting Time: 2 Response Time: 2
-PID: 6 Turnover Time: 6 Waiting Time: 0 Response Time: 0
-Average turnaround time for SRTF = 18.50
-Average waiting time for SRTF = 11.67
-Average response time for SRTF = 11.67
+PID: 1 Turnover Time: 3 Waiting Time: 0 Response Time: 0
+PID: 2 Turnover Time: 17 Waiting Time: 10 Response Time: 10
+PID: 3 Turnover Time: 26 Waiting Time: 18 Response Time: 18
+PID: 4 Turnover Time: 31 Waiting Time: 23 Response Time: 23
+PID: 5 Turnover Time: 7 Waiting Time: 3 Response Time: 3
+PID: 6 Turnover Time: 7 Waiting Time: 2 Response Time: 2
+Average turnaround time for SRTF = 15.17
+Average waiting time for SRTF = 9.33
+Average response time for SRTF = 9.33
 
 RR processes
-PID: 2 Turnover Time: 33 Waiting Time: 25 Response Time: 0
-PID: 6 Turnover Time: 34 Waiting Time: 28 Response Time: 5
-PID: 5 Turnover Time: 31 Waiting Time: 25 Response Time: 10
-PID: 3 Turnover Time: 30 Waiting Time: 24 Response Time: 15
-PID: 1 Turnover Time: 31 Waiting Time: 24 Response Time: 20
-PID: 4 Turnover Time: 34 Waiting Time: 26 Response Time: 25
-Average turnaround time for RR = 32.17
-Average waiting time for RR = 25.33
-Average response time for RR = 12.50
+PID: 1 Turnover Time: 3 Waiting Time: 0 Response Time: 3
+PID: 3 Turnover Time: 29 Waiting Time: 21 Response Time: 6
+PID: 6 Turnover Time: 12 Waiting Time: 7 Response Time: 11
+PID: 2 Turnover Time: 30 Waiting Time: 23 Response Time: 16
+PID: 4 Turnover Time: 31 Waiting Time: 23 Response Time: 21
+PID: 5 Turnover Time: 22 Waiting Time: 18 Response Time: 26
+Average turnaround time for RR = 21.17
+Average waiting time for RR = 15.33
+Average response time for RR = 13.83
 
 Priority processes
-PID: 1 Turnover Time: 7 Waiting Time: 0 Response Time: 0
-PID: 2 Turnover Time: 29 Waiting Time: 21 Response Time: 6
-PID: 3 Turnover Time: 35 Waiting Time: 29 Response Time: 29
-PID: 4 Turnover Time: 15 Waiting Time: 7 Response Time: 7
-PID: 5 Turnover Time: 31 Waiting Time: 25 Response Time: 25
-PID: 6 Turnover Time: 6 Waiting Time: 0 Response Time: 0
-Average turnaround time for PRIORITY = 20.50
-Average waiting time for PRIORITY = 13.67
-Average response time for PRIORITY = 11.17
+PID: 1 Turnover Time: 12 Waiting Time: 9 Response Time: 0
+PID: 2 Turnover Time: 33 Waiting Time: 26 Response Time: 26
+PID: 3 Turnover Time: 27 Waiting Time: 19 Response Time: 19
+PID: 4 Turnover Time: 16 Waiting Time: 8 Response Time: 8
+PID: 5 Turnover Time: 5 Waiting Time: 1 Response Time: 1
+PID: 6 Turnover Time: 5 Waiting Time: 0 Response Time: 0
+Average turnaround time for PRIORITY = 16.33
+Average waiting time for PRIORITY = 10.50
+Average response time for PRIORITY = 9.00
 
 Algorithm with fastest average turnaround time: SJF
-Fastest average turnaround time: 18.50
+Fastest average turnaround time: 15.17
 
 Algorithm with fastest average waiting time: SJF
-Fastest average waiting time: 11.67
+Fastest average waiting time: 9.33
 
 Algorithm with fastest average response time: Priority
-Fastest average response time: 11.17
+Fastest average response time: 9.00
 

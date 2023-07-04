@@ -20,6 +20,14 @@ void calclulate_srtf(Process processes[], int num){
     int responded[num];
     int flag = 0, shortest = -1, currentTime = 0, minimum = INT_MAX, finishTime = 0, complete = 0, responseTime = 0;
 
+    int ganttBar[100];
+    int ganttCount = 0;
+
+    for (int i = 0; i < 100; i++)
+    {
+        ganttBar[i] = 0;
+    }
+
     for (int i = 0;i<num;i++){
         rt[i] = processes[i].burstTime;
         arrived[i] = 0;
@@ -52,6 +60,8 @@ void calclulate_srtf(Process processes[], int num){
             responded[shortest] = 1;
             }
             rt[shortest]--;
+            ganttBar[ganttCount] = shortest + 1;
+            ganttCount++;
             currentTime++;
             if (rt[shortest] == 0){
                 complete++;
@@ -66,9 +76,13 @@ void calclulate_srtf(Process processes[], int num){
             }
         }
         else{
+            ganttCount++;
             currentTime++;
         }
     }
+
+    draw_gantt(ganttBar, ganttCount);
+    printf("\n");
 }
 
 // int main(){
