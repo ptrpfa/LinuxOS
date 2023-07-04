@@ -94,20 +94,6 @@ void printTable(Process processes[6]){
 
 void setup(Process processes[], Process fcfs_processes[], Process sjf_processes[], Process srtf_processes[], Process rr_processes[], Process priority_processes[], int num){
 
-    // Process processes[6];
-
-    // initializeProcesses(processes, num);
-
-    // printTable(processes);
-
-    // for (int i = 0; i < num; i++)
-    // {
-    //     printf("PID: %d\n", processes[i].processId);
-    //     printf("Arrival Time: %d\n", processes[i].arrivalTime);
-    //     printf("Burst Time: %d\n", processes[i].burstTime);
-    //     printf("Priority ID: %d\n", processes[i].priorityId);
-    // }
-    
 
     for (int i = 0; i < num; i++)
     {
@@ -251,33 +237,3 @@ int main(){
     }
     return 0;
 }
-
-
-// FOR TESTING
-// for (int i = 0; i < num; i++)
-// {
-//     printf("PID: %d\n", fcfs_processes[i].processId);
-//     printf("Arrival Time: %d\n", fcfs_processes[i].arrivalTime);
-//     printf("Burst Time: %d\n", fcfs_processes[i].burstTime);
-//     printf("Priority ID: %d\n", fcfs_processes[i].priorityId);
-
-//     printf("PID: %d\n", sjf_processes[i].processId);
-//     printf("Arrival Time: %d\n", sjf_processes[i].arrivalTime);
-//     printf("Burst Time: %d\n", sjf_processes[i].burstTime);
-//     printf("Priority ID: %d\n", sjf_processes[i].priorityId);
-
-//     printf("PID: %d\n", srtf_processes[i].processId);
-//     printf("Arrival Time: %d\n", srtf_processes[i].arrivalTime);
-//     printf("Burst Time: %d\n", srtf_processes[i].burstTime);
-//     printf("Priority ID: %d\n", srtf_processes[i].priorityId);
-
-//     printf("PID: %d\n", rr_processes[i].processId);
-//     printf("Arrival Time: %d\n", rr_processes[i].arrivalTime);
-//     printf("Burst Time: %d\n", rr_processes[i].burstTime);
-//     printf("Priority ID: %d\n", rr_processes[i].priorityId);
-
-//     printf("PID: %d\n", priority_processes[i].processId);
-//     printf("Arrival Time: %d\n", priority_processes[i].arrivalTime);
-//     printf("Burst Time: %d\n", priority_processes[i].burstTime);
-//     printf("Priority ID: %d\n", priority_processes[i].priorityId);
-// }

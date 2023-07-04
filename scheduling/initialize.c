@@ -3,16 +3,6 @@
 #include <time.h>
 #include "schedule.h"
 
-// typedef struct{
-//     int processId;
-//     int priorityId;
-//     int arrivalTime;
-//     int burstTime;
-//     int turnaroundTime;
-//     int waitingTime;
-//     int responseTime;
-// } Process;
-
 void initializeProcesses(Process processes[], int num){
 
     srand(time(NULL));
@@ -50,21 +40,3 @@ void initializeProcesses(Process processes[], int num){
 
     }
 }
-
-// int main(){
-
-//     Process processes[6];
-
-//     initializeProcesses(processes, 6);
-
-//     for (int i=0;i<6;i++){
-//         printf("PID: %d\n", processes[i].processId);
-//         printf("Priority ID: %d\n", processes[i].priorityId);
-//         printf("Arrival Time: %d\n", processes[i].arrivalTime);
-//         printf("Burst Time: %d\n", processes[i].burstTime);
-//         printf("\n");
-//     }
-
-//     return 0;
-
-// }

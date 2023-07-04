@@ -2,16 +2,6 @@
 #include <limits.h>
 #include "schedule.h"
 
-// typedef struct{
-//     int processId;
-//     int priorityId;
-//     int arrivalTime;
-//     int burstTime;
-//     int turnaroundTime;
-//     int waitingTime;
-//     int responseTime;
-// } Process;
-
 void calclulate_srtf(Process processes[], int num){
 
     int rt[num];
@@ -84,28 +74,3 @@ void calclulate_srtf(Process processes[], int num){
     draw_gantt(ganttBar, ganttCount);
     printf("\n");
 }
-
-// int main(){
-
-//     Process processes[4] = {
-//         {1,0,0,8},
-//         {2,0,1,4},
-//         {3,0,2,9},
-//         {4,0,3,5},
-//     };
-
-//     calclulate(processes, 4);
-
-//     for (int i=0;i<4;i++){
-//         printf("PID: %d\n", processes[i].processId);
-//         printf("Arrival Time: %d\n", processes[i].arrivalTime);
-//         printf("Burst Time: %d\n", processes[i].burstTime);
-//         printf("Turnaround time: %d\n", processes[i].turnaroundTime);       
-//         printf("Waiting time: %d\n", processes[i].waitingTime);
-//         printf("Reponse time: %d\n", processes[i].responseTime);        
-//         printf("\n");
-//     }
-
-//     return 0;
-
-// }

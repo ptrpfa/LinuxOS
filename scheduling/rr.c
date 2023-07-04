@@ -2,17 +2,6 @@
 #include <limits.h>
 #include "schedule.h"
 
-// typedef struct{
-//     int processId;
-//     int priorityId;
-//     int arrivalTime;
-//     int burstTime;
-//     int turnaroundTime;
-//     int waitingTime;
-//     int responseTime;
-// } Process;
-
-
 void rr_swap(Process *a, Process *b) {
     Process temp = *a;
     *a = *b;
@@ -99,28 +88,3 @@ void calculate_rr(Process processes[], int num, int quantam){
     calculate_for_rr(processes, num, quantam);
 
 }
-
-// int main(){
-
-//     Process processes[3] = {
-//         {1,0,0,24},
-//         {2,0,0,3},
-//         {3,0,0,3},
-//     };
-
-//     sortProcesses(processes, 3);
-//     calculate(processes, 3, 4);
-
-//     for (int i=0;i<3;i++){
-//         printf("PID: %d\n", processes[i].processId);
-//         printf("Arrival Time: %d\n", processes[i].arrivalTime);
-//         printf("Burst Time: %d\n", processes[i].burstTime);
-//         printf("Turnaround time: %d\n", processes[i].turnaroundTime);       
-//         printf("Waiting time: %d\n", processes[i].waitingTime);
-//         printf("Reponse time: %d\n", processes[i].responseTime);        
-//         printf("\n");
-//     }
-
-//     return 0;
-
-// }
