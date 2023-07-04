@@ -156,7 +156,7 @@ void printInfo(Process processes[], Algo *algo, int num, char type[]){
     printf("%s processes\n", type);
     for (int i = 0; i < num; i++)
     {
-        printf("PID: %d Turnover Time: %d Waiting Time: %d Response Time: %d\n", processes[i].processId, processes[i].turnaroundTime, processes[i].waitingTime, processes[i].responseTime);
+        printf("PID: %d Turnaround Time: %d Waiting Time: %d Response Time: %d\n", processes[i].processId, processes[i].turnaroundTime, processes[i].waitingTime, processes[i].responseTime);
     }
     printf("Average turnaround time for %s = %.2f\n", type, algo->turnaround_average);
     printf("Average waiting time for %s = %.2f\n", type, algo->waiting_average);

@@ -34,6 +34,14 @@ void calculate_for_rr(Process processes[], int num, int quantum) {
     int responseFlag[num];
     int currentTime = 0, finishTime = 0, complete = 0;
 
+    int ganttBar[100];
+    int ganttCount = 0;
+
+    for (int i = 0; i < 100; i++)
+    {
+        ganttBar[i] = 0;
+    }
+
     for (int i = 0; i < num; i++) {
         rt[i] = processes[i].burstTime;
         responseFlag[i] = 0;
@@ -50,10 +58,22 @@ void calculate_for_rr(Process processes[], int num, int quantum) {
                 }
                 if (rt[j] > quantum) {
                     rt[j] -= quantum;
+                    for (int i = 0; i < quantum; i++)
+                    {
+                        ganttBar[ganttCount] = processes[j].processId;
+                        ganttCount++;
+                    }
+                    
                     currentTime += quantum;
                 }
                 else {
                     currentTime += rt[j];
+                    for (int i = 0; i < rt[j]; i++)
+                    {
+                        ganttBar[ganttCount] = processes[j].processId;
+                        ganttCount++;
+                    }
+                    
                     rt[j] = 0;
                     finishTime = currentTime;
                     processes[j].turnaroundTime = finishTime - processes[j].arrivalTime;
@@ -63,9 +83,14 @@ void calculate_for_rr(Process processes[], int num, int quantum) {
             }
         }
         if(flag == 0) {
+            ganttCount++;
             currentTime++;
         }
     }
+    
+    draw_gantt(ganttBar, ganttCount);
+    printf("\n");
+
 }
 
 void calculate_rr(Process processes[], int num, int quantam){
