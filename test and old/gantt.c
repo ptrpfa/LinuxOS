@@ -1,145 +1,85 @@
-    #include <stdio.h>
-    #include <limits.h>
-    #define SIZE 100
+#include <stdio.h>
+#define MAX_SIZE 100
 
-    typedef struct{
-        int processId;
-        int priorityId;
-        int arrivalTime;
-        int burstTime;
-        int turnaroundTime;
-        int waitingTime;
-        int responseTime;
-    } Process;
+int main() {
+    int gantt[MAX_SIZE] = {4, 4, 4, 3, 3, 3, 3, 1, 1, 1, 1, 1, 2, 0};
+    int size = sizeof(gantt) / sizeof(int);
+    int count = 1;
+    int previous = gantt[0];
+    int time = 0;
 
-    void print_gantt(int gantt[], int ganttSize){
+    printf("|");
 
-        printf("|");
-        for (int i = 0; i < ganttSize; i++)
-        {
-            int current = gantt[i];
-            int next = gantt[i+1];
-            if (current != next)
-            {
-                printf("---|");
+    for (int i = 1; i < MAX_SIZE; i++) {
+        if (gantt[i] == 0) {
+            break;
+        } else if (gantt[i] == previous) {
+            count++;
+        } else {
+            for (int j = 0; j < count; j++) {
+                printf("-");
             }
-            else
+            printf("%d", previous);
+            for (int j = 0; j < count; j++) {
+                printf("-");
+            }
+            printf("|");
+            time += count;
+            count = 1;
+        }
+        previous = gantt[i];
+    }
+
+    for (int j = 0; j < count; j++) {
+        printf("-");
+    }
+    printf("%d", previous);
+    for (int j = 0; j < count; j++) {
+        printf("-");
+    }
+    printf("|");
+    printf("\n");
+
+    printf("0");
+    count = 1;
+    time = 0;
+    previous = gantt[0];
+
+    for (int i = 1; i < MAX_SIZE; i++) {
+
+
+        if (gantt[i] == previous) {
+            count++;
+        } else {
+            time += count;
+            if (time >= 10)
             {
-                printf("---");
+                for (int j = 0; j < 2*count; j++) {
+                printf(" ");
+                }
+                printf("%d", time);
+                count = 1;
+            }
+            else{
+                for (int j = 0; j < 2*count + 1; j++) {
+                printf(" ");
+                }
+                printf("%d", time);
+                count = 1;
             }
             
         }
-        printf("\n");
-        printf("0");
-        for (int i = 0; i < ganttSize; i++)
-        {
-            int current = gantt[i];
-            int next = gantt[i+1];
-            if (current != next)
-            {   
-                if (i>9)
-                {
-                    printf("  %d",i+1);
-                }
-                else
-                {
-                    printf("   %d",i+1);
-                }
-            }
-            else
-            {
-                printf("   ");
-            }
+        previous = gantt[i];
+
+        if (gantt[i] == 0) {
+        break;
         }
-        
+
+    }
+    time += count;
+    for (int j = 0; j < 2*count; j++) {
+        printf(" ");
     }
 
-    void calclulate(Process processes[], int num){
-
-        int rt[num];
-        int arrived[num];
-        int completed[num];
-        int flag = 0, shortest = -1, currentTime = 0, minimum = INT_MAX, finishTime = 0, complete = 0, occupied = 0, responseTime = 0;
-        int gantt[SIZE]; // assuming the total time will not exceed 1000
-        int ganttSize = 0;
-
-        for (int i = 0; i < SIZE; i++)
-        {
-            gantt[i] = 0;
-        }
-        
-
-        for (int i = 0;i<num;i++){
-            rt[i] = processes[i].burstTime;
-            arrived[i] = 0;
-            completed[i] = 0;
-        }
-
-        while(complete!=num){
-
-            for (int j = 0;j<num;j++){
-                if (processes[j].arrivalTime <= currentTime && rt[j] != 0){
-                    arrived[j] = 1;
-                }
-            }
-
-            for (int j = 0;j<num;j++){
-                if (arrived[j] == 1 && rt[j]<minimum && completed[j] != 1 && occupied == 0){
-                        flag = 1;
-                        minimum = rt[j];
-                        shortest = j;
-                        responseTime = currentTime;
-                    };
-            }
-
-            if (flag == 1){
-                occupied = 1;
-                rt[shortest]--;
-                currentTime++;
-                gantt[ganttSize++] = processes[shortest].processId;
-                if (rt[shortest] == 0){
-                    complete++;
-                    arrived[shortest] = 0;
-                    completed[shortest] = 1;
-                    finishTime = currentTime;
-                    minimum = INT_MAX;
-                    processes[shortest].turnaroundTime = finishTime - processes[shortest].arrivalTime;
-                    processes[shortest].waitingTime = processes[shortest].turnaroundTime - processes[shortest].burstTime;
-                    processes[shortest].responseTime = responseTime - processes[shortest].arrivalTime;
-                    occupied = 0;
-                    shortest = -1;
-                    flag = 0;
-                }
-            }
-            else{
-                currentTime++;
-            }
-        }
-        print_gantt(gantt,ganttSize);
-    }
-
-
-    int main(){
-
-        Process processes[4] = {
-            {1,0,2,4},
-            {2,0,3,3},
-            {3,0,3,5},
-            {4,0,2,2},
-        };
-
-        calclulate(processes, 4);
-
-        // for (int i=0;i<4;i++){
-        //     printf("PID: %d\n", processes[i].processId);
-        //     printf("Arrival Time: %d\n", processes[i].arrivalTime);
-        //     printf("Burst Time: %d\n", processes[i].burstTime);
-        //     printf("Turnaround time: %d\n", processes[i].turnaroundTime);    
-        //     printf("Waiting time: %d\n", processes[i].waitingTime);
-        //     printf("Reponse time: %d\n", processes[i].responseTime);   
-        //     printf("\n");
-        // }
-
-        return 0;
-
-    }    
+    return 0;
+}
