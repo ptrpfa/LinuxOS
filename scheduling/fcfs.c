@@ -54,7 +54,7 @@ void calculate_for_fcfs(Process processes[], int num){
     
 }
 
-// function to sort and calculate the process details
+// main function to sort and calculate the process details
 void calculate_fcfs(Process processes[], int num){
     
     fcfs_sortProcesses(processes, num);
