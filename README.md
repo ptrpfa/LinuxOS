@@ -9,13 +9,26 @@
 ```
 README.md (this file)
 
-Group02-CSC1107.docx
-
-presentation/
+deliverables/
+    Group02-report-CSC1107.docx
     Group02-CSC1107.mp4
     Group02(Demo)-CSC1107.mp4
     Group02(Slides)-CSC1107.pptx
 
+docs/ (screenshots and demo video)
+
 source-code/
+    hashing/
+        header/ (header files)
+            utils_common.h
+            utils_kernel.h
+            utils_user.h
+        CSC1107_Group_2_kernel.c (linux kernel module)
+        CSC1107_Group_2_user.c (user space application)
+        CSC1107_Group_2.sh (bash script)
+
+    scheduling/
+        Q2_Group_2.c (scheduling program)
+        Q2_Group_2.txt (output file)
     
 ```
