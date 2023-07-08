@@ -1,7 +1,7 @@
 ### CSC1107 Operating Systems Group 2
 2200692 Pang Zi Jian Adrian<br>
 2200795 Ashley Tay Yong Jun<br>
-2200959 Peter Afandy<br>
+2200959 Peter Febrianto Afandy<br>
 2201014 Tng Jian Rong<br>
 2201159 Ryan Lai Wei Shao<br>
 
