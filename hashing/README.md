@@ -2,9 +2,22 @@
 ---
 
 ### Program Usage
-1. Transfer all files to your Raspberry Pi under the `/linux/CSC1107_assignment/` directory.
+1. Transfer all project files to your Raspberry Pi under the `/linux/CSC1107_assignment/` directory. You can run the following commands to do so:
+    ```
+    # On Raspberry Pi
+    sudo mkdir /linux/CSC1107_assignment
+    mkdir ~/Desktop/transfers
+
+    # On host machine (transfer files to Raspberry Pi's ~/Desktop/transfers directory)
+    cd <directory containing project files>
+    scp -r * <username>@<domain or IP address>:~/Desktop/transfers 
+
+    # On Raspberry Pi
+    sudo mv ~/Desktop/transfers/* /linux/CSC1107_assignment
+    ```
 2. Run the `Makefile` using the command:
     ```
+    cd /linux/CSC1107_assignment
     make
     ```
 3. Open two terminals, one for viewing the `dmesg` outputs, and another for running commands.
@@ -21,7 +34,7 @@
     ```
     sudo ./CSC1107_Group_2_user
     ```
-    Enter your hashing algorithm of choice and try to play around with the program. Observe the updates int he kernel ring buffer as well.
+    Enter your hashing algorithm of choice and try to play around with the program. Observe the updates in the kernel ring buffer as well.
 7. To clean up, run the following commands:
     ```
     sudo rmmod CSC1107_Group_2_kernel 
