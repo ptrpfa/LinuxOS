@@ -19,7 +19,7 @@ char* get_datetime_string(void) {
     // Initialise datetime variables
     char* str_datetime = malloc(BUF_SIZE * sizeof(char));       // Variable for overall datetime string
     char str_date[BUF_SIZE] = "";                               // Temporary variable for last portion of datetime string
-    char* day_suffix;                                           // Temporary variable for dat suffix portion of datetime string
+    char* day_suffix;                                           // Temporary variable for day suffix portion of datetime string
 
     // Check for errors during memory allocation
     if (str_datetime == NULL) { 
