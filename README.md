@@ -25,6 +25,7 @@ source-code/
             utils_user.h
         CSC1107_Group_2_kernel.c (linux kernel module)
         CSC1107_Group_2_user.c (user space application)
+        Makefile (to compile kernel and user space programs)
         CSC1107_Group_2.sh (bash script)
 
     scheduling/
