@@ -22,7 +22,7 @@
     folder_name="Folder_Group_2" 							
     source_dir="/linux/CSC1107_assignment"
     ```
-    *Ensure that all source code files and folders are in the present in the `source_dir` !*
+    *Ensure that all source code files and folders are present in the `source_dir` !*
 
 3. Run the bash script using the following command:
     ```
