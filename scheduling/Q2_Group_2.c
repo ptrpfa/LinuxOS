@@ -523,15 +523,17 @@ void initializeProcesses_Priority(Process processes[], int num)
             }
         }
     }
-
+    
     // Assign priorities based on the sorted burst times
     for (int i = 0; i < NUM_PROC; i++) {
+        // Set Process ID
+        processes[i].processId = i + 1;
         // Assign priority in ascending order
         processes[i].priorityId = i + 1; 
         // Set the burst time for the process
         processes[i].burstTime = burstTimes[i]; 
         // Set previous arrival time
-        processes[i].arrivalTime = ((rand() % (BTUPPER - BTLOWER + 1)) + BTLOWER);
+        processes[i].arrivalTime = ((rand() % (BTUPPER - processes[i-1].arrivalTime + 1)) + processes[i-1].arrivalTime);
     }
 
 }
