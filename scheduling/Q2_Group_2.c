@@ -582,14 +582,12 @@ void initializeProcesses_SJF(Process processes[], int num) {
                 int value = BTUPPER - remainingTime + 1;
                 if(value == 0 ){
                     processes[i].burstTime = (rand() % remainingTime) ;
-                    printf("%d Here1: %d, Remaining: %d\n", processes[i].processId, processes[i].burstTime, remainingTime);
                 }else
                 {
                     processes[i].burstTime = remainingTime + (rand() % value);
                     if(processes[i].arrivalTime != processes[i-1].arrivalTime){
                         processes[i].burstTime +=1;
                     }
-                    printf("%d Here: %d, Remaining: %d\n", processes[i].processId, processes[i].burstTime, remainingTime);
                 }
                 processes[i].burstTime = processes[i].burstTime+1;
             } else {
