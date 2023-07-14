@@ -185,122 +185,430 @@ void initializeProcesses_FCFS(Process processes[], int num)
     }
 }
 
-void initializeProcesses_SJF(Process processes[], int num){
+// void initializeProcesses_SJF(Process processes[], int num){
     
-    //init
+//     //init
+//     srand(time(NULL));
+//     int previousAT = 0;
+//     int previousFT = 0;
+//     int remainingTime = 0;
+//     Process backup[NUM_PROC];
+
+//     //Set burst time for first process
+
+
+//     //Set AT,ProcessID, PriorityID for each processes
+//     for(int i = 0; i < NUM_PROC; i++)
+//     {   
+//         //Set process ID
+//         processes[i].processId = i + 1;
+
+//         //Set random arrival time
+//         processes[i].arrivalTime = rand() % 10;
+        
+//         //Set priority id
+//         processes[i].priorityId = rand() % BTUPPER;
+
+//         processes[i].burstTime =0;
+//         // Create a backup of the original order
+//         backup[i] = processes[i];
+
+//     }
+
+//     //Sort and swap the process in ascending arrival time
+//     for (int i = 0; i < NUM_PROC-1; i++) {
+//         for (int j = 0; j < NUM_PROC-i-1; j++) {
+//             if (backup[j].arrivalTime > backup[j+1].arrivalTime) {
+//                 //swap
+//                 Process temp = backup[j];
+//                 backup[j] = backup[j+1];
+//                 backup[j+1] = temp;
+//             }
+//         }
+//     }
+
+//     //Setting burst time
+//     for(int i = 0; i < NUM_PROC; i++)
+//     { 
+//         if(i == 0)
+//         {
+//             backup[0].burstTime = ((rand() % (BTUPPER - BTLOWER + 1)) + BTLOWER );
+           
+//         }else{
+//             previousFT = (backup[i-1].arrivalTime + backup[i-1].burstTime); 
+//             remainingTime = (previousFT - backup[i].arrivalTime);
+            
+//             if(backup[i].arrivalTime < previousFT)
+//             {
+//                 int value = (BTUPPER - remainingTime + 1);
+//                 if (value == 0)
+//                 {
+//                     backup[i].burstTime =  remainingTime + (rand() % BTUPPER);
+//                 }
+//                 else
+//                 {
+//                     backup[i].burstTime =  remainingTime + (rand() % value);
+//                 }
+//                 backup[i].burstTime = backup[i].burstTime+3;
+//             }else
+//             {
+//                 backup[i].burstTime = ((rand() % (BTUPPER - BTLOWER + 1)) + BTLOWER );
+//             }
+//         }
+        
+//     }
+
+//     //Reset
+//     for (int i = 0; i < NUM_PROC ; i++) {
+//         int id = backup[i].processId;
+//         processes[id-1] = backup[i];
+//     }
+// }
+
+// void initializeProcesses_SJF(Process processes[], int num) {
+//     srand(time(NULL));
+
+//     // Set AT, ProcessID, PriorityID, and burstTime for each process
+//     for (int i = 0; i < num; i++) {
+//         // Set process ID
+//         processes[i].processId = i + 1;
+
+//         // Set random arrival time
+//         processes[i].arrivalTime = rand() % 10;
+
+//         // Set priority ID
+//         processes[i].priorityId = rand() % BTUPPER;
+
+//         // Set burst time for first process
+//         if (i == 0) {
+//             processes[0].burstTime = rand() % (BTUPPER - BTLOWER + 1) + BTLOWER;
+//         } else {
+//             int previousFT = processes[i - 1].arrivalTime + processes[i - 1].burstTime;
+//             int remainingTime = previousFT - processes[i].arrivalTime;
+//             if (processes[i].arrivalTime < previousFT) {
+//                 int value = BTUPPER - remainingTime + 1;
+//                 if(value == 0 ){
+//                     processes[i].burstTime =  remainingTime + (rand() % BTUPPER);
+//                 }else
+//                 {
+//                     processes[i].burstTime = remainingTime + (rand() % value) + 3;
+//                 }
+                 
+//             } else {
+//                 processes[i].burstTime = rand() % (BTUPPER - BTLOWER + 1) + BTLOWER;
+//             }
+//         }
+//     }
+// }
+
+//BEST
+// void initializeProcesses_SJF(Process processes[], int num) {
+//     srand(time(NULL));
+
+//     // Set AT, ProcessID, PriorityID, and burstTime for each process
+//     processes[0].arrivalTime = 0;
+//     for (int i = 1; i < num; i++) {
+//         // Set process ID
+//         processes[i].processId = i + 1;
+
+//         // Set random arrival time
+//         processes[i].arrivalTime = rand() % 15;
+
+//         // Set priority ID
+//         processes[i].priorityId = rand() % BTUPPER;
+//     }
+
+//     // Sort processes based on arrival time using bubble sort
+//     for (int i = 0; i < num - 1; i++) {
+//         for (int j = 0; j < num - i - 1; j++) {
+//             if (processes[j].arrivalTime > processes[j + 1].arrivalTime) {
+//                 // Swap processes
+//                 Process temp = processes[j];
+//                 processes[j] = processes[j + 1];
+//                 processes[j + 1] = temp;
+//             }
+//         }
+//     }
+
+//     // Set burst time for each process
+//     for (int i = 0; i < num; i++) {
+//         // Set burst time for first process
+//         if (i == 0) {
+//             processes[0].burstTime = rand() % (BTUPPER - BTLOWER + 1) + BTLOWER;
+//         } else {
+//             if(processes[i].arrivalTime != processes[i-1].arrivalTime){
+//                 int previousFT = processes[i - 1].arrivalTime + processes[i - 1].burstTime;
+//                 int remainingTime = previousFT - processes[i].arrivalTime;
+                
+//                 if (processes[i].arrivalTime < previousFT) {
+//                     int value = BTUPPER - remainingTime + 1;
+//                     if(value == 0 ){
+//                         processes[i].burstTime = (rand() % remainingTime) ;
+//                         printf("Here: %d, Remaining: %d\n", processes[i].burstTime, remainingTime);
+//                     }else
+//                     {
+//                         processes[i].burstTime = remainingTime + (rand() % value);
+//                         printf("Second: %d\n", processes[i].burstTime);
+//                     }
+//                     processes[i].burstTime = processes[i].burstTime+1;
+//                 } else {
+//                     processes[i].burstTime = rand() % (BTUPPER - BTLOWER + 1) + BTLOWER;
+//                 }
+//             }else{
+//                 //same arrival time as previous 
+//                 if(i != 1){
+//                     int previousFT = processes[i - 2].arrivalTime + processes[i - 2].burstTime;
+//                     int remainingTime = previousFT - processes[i].arrivalTime;
+                    
+//                     if (processes[i].arrivalTime < previousFT) {
+//                         int value = BTUPPER - remainingTime + 1;
+//                         if(value == 0 ){
+//                             processes[i].burstTime = (rand() % remainingTime);
+//                         }else
+//                         {
+//                             processes[i].burstTime = remainingTime + (rand() % value);
+                        
+//                         }
+//                         processes[i].burstTime = processes[i].burstTime+1;
+//                     } else {
+//                         processes[i].burstTime = rand() % (BTUPPER - BTLOWER + 1) + BTLOWER;
+//                     }
+//                 }else{
+//                                 int previousFT = processes[i - 1].arrivalTime + processes[i - 1].burstTime;
+//                 int remainingTime = previousFT - processes[i].arrivalTime;
+                
+//                 if (processes[i].arrivalTime < previousFT) {
+//                     int value = BTUPPER - remainingTime + 1;
+//                     if(value == 0 ){
+//                         processes[i].burstTime = (rand() % remainingTime) ;
+//                         printf("Here: %d, Remaining: %d\n", processes[i].burstTime, remainingTime);
+//                     }else
+//                     {
+//                         processes[i].burstTime = remainingTime + (rand() % value);
+//                         printf("Second: %d\n", processes[i].burstTime);
+//                     }
+//                     processes[i].burstTime = processes[i].burstTime+1;
+//                 } else {
+//                     processes[i].burstTime = rand() % (BTUPPER - BTLOWER + 1) + BTLOWER;
+//                 }
+//                 }
+
+//             }
+//         }
+//     }
+    
+//     Process backup[NUM_PROC];
+//     for (int i = 0; i < num; i++) {
+//         int id = processes[i].processId;
+//         backup[id - 1] = processes[i];
+//     }
+
+//     for (int i = 0; i < num; i++) {
+//         processes[i] = backup[i];
+//     }
+// }
+
+
+
+
+
+
+// void initializeProcesses_SJF(Process processes[], int num) {
+//     srand(time(NULL));
+
+//     int duplicateCount[16] = {0};
+
+//     processes[0].arrivalTime = 0;
+
+//     for (int i = 1; i < NUM_PROC; i++) {
+//         // Set process ID
+//         processes[i].processId = i + 1;
+
+//         // Set random arrival time
+
+//         do{
+//             processes[i].arrivalTime = rand() % 15;
+//         } while (duplicateCount[processes[i].arrivalTime  - 1] >= 1);
+
+//         duplicateCount[i] += 1;
+
+//         // Set priority ID
+//         processes[i].priorityId = rand() % BTUPPER;
+//     }
+
+//     // Sort processes based on arrival time using bubble sort
+//     for (int i = 0; i < num - 1; i++) {
+//         for (int j = 0; j < num - i - 1; j++) {
+//             if (processes[j].arrivalTime > processes[j + 1].arrivalTime) {
+//                 // Swap processes
+//                 Process temp = processes[j];
+//                 processes[j] = processes[j + 1];
+//                 processes[j + 1] = temp;
+//             }
+//         }
+//     }
+
+//     int fakeArrival[15] =  {0};
+
+//     // Set burst time for each process
+//     for (int i = 0; i < num; i++) {
+//         // Set burst time for first process
+//         if (i == 0) {
+//             processes[0].burstTime = rand() % (BTUPPER - BTLOWER + 1) + BTLOWER;
+//         } else {
+//             int previousFT;
+//             int remainingTime;
+            
+//             //Check if the arrival is duplcated
+//             if(processes[i].arrivalTime != processes[i-1].arrivalTime){
+//                 if (fakeArrival[i] > 0){
+//                     previousFT = fakeArrival[i] + processes[i - 1].burstTime;
+//                     remainingTime = previousFT - processes[i].arrivalTime;
+//                 }else{
+//                     previousFT = processes[i - 1].arrivalTime + processes[i - 1].burstTime;
+//                     remainingTime = previousFT - processes[i].arrivalTime;
+//                 }
+
+//             }else{
+//                 fakeArrival[i] = processes[i - 1].arrivalTime + processes[i - 1].burstTime;
+//                 if(i != 1){
+//                     previousFT = processes[i - 2].arrivalTime + processes[i - 2].burstTime;
+//                     remainingTime = previousFT - processes[i].arrivalTime;
+//                 }else{
+//                     previousFT = processes[i - 1].arrivalTime + processes[i - 1].burstTime;
+//                     remainingTime = previousFT - processes[i].arrivalTime;
+                    
+//                 }
+                    
+//             }
+            
+//             if (processes[i].arrivalTime < previousFT) {
+//                 int value = BTUPPER - remainingTime + 1;
+//                 if(value == 0 ){
+//                     processes[i].burstTime = (rand() % remainingTime) ;
+//                     printf("%d Here1: %d, Remaining: %d\n", processes[i].processId, processes[i].burstTime, remainingTime);
+//                 }else
+//                 {
+//                     processes[i].burstTime = remainingTime + (rand() % value);
+//                     if(processes[i].arrivalTime != processes[i-1].arrivalTime){
+//                         processes[i].burstTime +=1;
+//                     }
+//                     printf("%d Here: %d, Remaining: %d\n", processes[i].processId, processes[i].burstTime, remainingTime);
+//                 }
+//                 processes[i].burstTime = processes[i].burstTime+1;
+//             } else {
+//                 processes[i].burstTime = rand() % (BTUPPER - BTLOWER + 1) + BTLOWER;
+//             }
+//         }
+//     }
+    
+//     Process backup[NUM_PROC];
+//     for (int i = 0; i < num; i++) {
+//         int id = processes[i].processId;
+//         backup[id - 1] = processes[i];
+//     }
+
+//     for (int i = 0; i < num; i++) {
+//         processes[i] = backup[i];
+//     }
+// }
+
+
+
+void initializeProcesses_SJF(Process processes[], int num) {
     srand(time(NULL));
-    int previousAT = 0;
-    int previousFT = 0;
-    int remainingTime = 0;
-    Process backup[NUM_PROC];
 
-    //Set burst time for first process
+    int duplicateCount[15] = {0};
 
+    processes[0].arrivalTime = 0;
 
-    //Set AT,ProcessID, PriorityID for each processes
-    for(int i = 0; i < NUM_PROC; i++)
-    {   
-        //Set process ID
+    for (int i = 1; i < NUM_PROC; i++) {
+        // Set process ID
         processes[i].processId = i + 1;
 
-        //Set random arrival time
-        processes[i].arrivalTime = rand() % 10;
-        
-        //Set priority id
+        // Set random arrival time
+        int duplicateId;
+        do{
+            duplicateId = rand() % 15 + 1;
+        } while (duplicateCount[duplicateId - 1] >= 1);
+
+        processes[i].arrivalTime = duplicateId;
+        duplicateCount[duplicateId - 1]++;
+
+        // Set priority ID
         processes[i].priorityId = rand() % BTUPPER;
-
-        processes[i].burstTime =0;
-        // Create a backup of the original order
-        backup[i] = processes[i];
-
     }
 
-    //Sort and swap the process in ascending arrival time
-    for (int i = 0; i < NUM_PROC-1; i++) {
-        for (int j = 0; j < NUM_PROC-i-1; j++) {
-            if (backup[j].arrivalTime > backup[j+1].arrivalTime) {
-                //swap
-                Process temp = backup[j];
-                backup[j] = backup[j+1];
-                backup[j+1] = temp;
+    // Sort processes based on arrival time using bubble sort
+    for (int i = 0; i < num - 1; i++) {
+        for (int j = 0; j < num - i - 1; j++) {
+            if (processes[j].arrivalTime > processes[j + 1].arrivalTime) {
+                // Swap processes
+                Process temp = processes[j];
+                processes[j] = processes[j + 1];
+                processes[j + 1] = temp;
             }
         }
     }
 
-    //Setting burst time
-    for(int i = 0; i < NUM_PROC; i++)
-    { 
-        if(i == 0)
-        {
-            backup[0].burstTime = ((rand() % (BTUPPER - BTLOWER + 1)) + BTLOWER );
-           
-        }else{
-            previousFT = (backup[i-1].arrivalTime + backup[i-1].burstTime); 
-            remainingTime = (previousFT - backup[i].arrivalTime);
+    // Set burst time for each process
+    for (int i = 0; i < num; i++) {
+        // Set burst time for first process
+        if (i == 0) {
+            processes[0].burstTime = rand() % (BTUPPER - BTLOWER + 1) + BTLOWER;
+        } else {
+            int previousFT;
+            int remainingTime;
             
-            if(backup[i].arrivalTime < previousFT)
-            {
-                int value = (BTUPPER - remainingTime + 1);
-                if (value == 0)
-                {
-                    backup[i].burstTime =  remainingTime + (rand() % BTUPPER);
+            //Check if the arrival is duplcated
+            if(processes[i].arrivalTime != processes[i-1].arrivalTime){
+          
+                previousFT = processes[i - 1].arrivalTime + processes[i - 1].burstTime;
+                remainingTime = previousFT - processes[i].arrivalTime;
+
+            }else{
+                if(i != 1){
+                    previousFT = processes[i - 2].arrivalTime + processes[i - 2].burstTime;
+                    remainingTime = previousFT - processes[i].arrivalTime;
+                }else{
+                    previousFT = processes[i - 1].arrivalTime + processes[i - 1].burstTime;
+                    remainingTime = previousFT - processes[i].arrivalTime;
+                    
                 }
-                else
+                    
+            }
+            
+            if (processes[i].arrivalTime < previousFT) {
+                int value = BTUPPER - remainingTime + 1;
+                if(value == 0 ){
+                    processes[i].burstTime = (rand() % remainingTime) ;
+                    printf("%d Here1: %d, Remaining: %d\n", processes[i].processId, processes[i].burstTime, remainingTime);
+                }else
                 {
-                    backup[i].burstTime =  remainingTime + (rand() % value);
+                    processes[i].burstTime = remainingTime + (rand() % value);
+                    if(processes[i].arrivalTime != processes[i-1].arrivalTime){
+                        processes[i].burstTime +=1;
+                    }
+                    printf("%d Here: %d, Remaining: %d\n", processes[i].processId, processes[i].burstTime, remainingTime);
                 }
-                backup[i].burstTime = backup[i].burstTime+3;
-            }else
-            {
-                backup[i].burstTime = ((rand() % (BTUPPER - BTLOWER + 1)) + BTLOWER );
+                processes[i].burstTime = processes[i].burstTime+1;
+            } else {
+                processes[i].burstTime = rand() % (BTUPPER - BTLOWER + 1) + BTLOWER;
             }
         }
-        
+    }
+    
+    Process backup[NUM_PROC];
+    for (int i = 0; i < num; i++) {
+        int id = processes[i].processId;
+        backup[id - 1] = processes[i];
     }
 
-    //Reset
-    for (int i = 0; i < NUM_PROC ; i++) {
-        int id = backup[i].processId;
-        processes[id-1] = backup[i];
+    for (int i = 0; i < num; i++) {
+        processes[i] = backup[i];
     }
-
-    // //For each of the process
-    // for (int i = 1; i < NUM_PROC; i++) {
-    //     //Set Process ID
-    //     processes[i].processId = i+1;
-
-    //     //Set current arrival time 
-    //     processes[i].arrivalTime = rand() % 9;
-
-    //     // //Remaining time to finish
-    //     // previousFT = (processes[i-1].arrivalTime + processes[i-1].burstTime);
-
-    //     // remainingTime = (previousFT-processes[i].arrivalTime);
-
-    //     // if(processes[i].arrivalTime < previousFT)
-    //     // {   
-    //     //     //floor is (previousFT-processes[i].arrivalTime)
-    //     //     //Upper is BTUPPER
-    //     //     //Generate a num between floor and upper 
-    //     //     //This is case where preemption may happens so we need to prevent it by making the next burst time to be bigger than the current burst time 
-    //     //     //processes[i].burstTime =  (rand() % BTUPPER + 1 - (previousFT-processes[i].arrivalTime)) + (previousFT-processes[i].arrivalTime);
-    //     //     processes[i].burstTime =  remainingTime + (rand() % (BTUPPER - remainingTime + 1));
-    //     // }else
-    //     // {
-    //     //      processes[i].burstTime = (rand() % BTUPPER + 1 - processes[i-1].burstTime) + processes[i-1].burstTime;
-    //     // }
-
-    //     for(int z=i; z >= 0; z--)
-    //     {
-    //         //Get previous FT
-    //         previousFT = (processes[z-1].arrivalTime + processes[z-1].burstTime);
-
-    //     }
-
-    //     //Set process priority ID 
-    //     processes[i].priorityId = rand() % BTUPPER;
-    // }
 }
+
 
 
 void initializeProcesses_SRTF(Process processes[], int num)
