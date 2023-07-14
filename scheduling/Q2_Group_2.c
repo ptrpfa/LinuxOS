@@ -40,7 +40,7 @@ void setup(Process processes[], Process fcfs_processes[], Process sjf_processes[
 void draw_gantt(int gantt[], int size);
 void swap(Process *a, Process *b);
 void sortProcesses(Process processes[], int num_process);
-void print_to_file(Process fcfs_processes[], Process sjf_processes[], Process srtf_processes[], Process rr_processes[], Process priority_processes[], Algo *fcfs_algo, Algo *sjf_algo, Algo *srtf_algo, Algo *rr_algo, Algo *priority_algo, int num);
+void print_to_file(int choice, Process fcfs_processes[], Process sjf_processes[], Process srtf_processes[], Process rr_processes[], Process priority_processes[], Algo *fcfs_algo, Algo *sjf_algo, Algo *srtf_algo, Algo *rr_algo, Algo *priority_algo, int num);
 void printTable(Process processes[]);
 void printInfo(Process processes[], Algo *algo, int num, char type[]);
 void calculate_algo(Process processes[], Process fcfs_processes[], Process sjf_processes[], Process srtf_processes[], Process rr_processes[], Process priority_processes[], Algo *fcfs_algo, Algo *sjf_algo, Algo *srtf_algo, Algo *rr_algo, Algo *priority_algo, int num);
@@ -55,8 +55,8 @@ void calculate_rr(Process processes[], int num, int quantam);
 void calculate_priority(Process processes[], int num);
 
 // Checking results
-void checkFastestAlgorithms(Algo *fcfs_algo, Algo *sjf_algo, Algo *srtf_algo, Algo *rr_algo, Algo *priority_algo);
-void checkFastestAlgorithms_file(FILE *file, Algo *fcfs_algo, Algo *sjf_algo, Algo *srtf_algo, Algo *rr_algo, Algo *priority_algo);
+void checkFastestAlgorithms(Algo *fcfs_algo, Algo *sjf_algo, Algo *srtf_algo, Algo *rr_algo, Algo *priority_algo, int choice);
+void checkFastestAlgorithms_file(FILE *file, Algo *fcfs_algo, Algo *sjf_algo, Algo *srtf_algo, Algo *rr_algo, Algo *priority_algo, int choice);
 
 int main()
 {
@@ -134,8 +134,8 @@ int main()
         setup(processes, fcfs_processes, sjf_processes, srtf_processes, rr_processes, priority_processes, num); // Assign base process generated values into all the algos
         printTable(processes);                                                                                  // Print the table to show generated burst, arrival, priority and quantam
         calculate_algo(processes, fcfs_processes, sjf_processes, srtf_processes, rr_processes, priority_processes, &fcfs_algo, &sjf_algo, &srtf_algo, &rr_algo, &priority_algo, num);
-        checkFastestAlgorithms(&fcfs_algo, &sjf_algo, &srtf_algo, &rr_algo, &priority_algo);
-        print_to_file(fcfs_processes, sjf_processes, srtf_processes, rr_processes, priority_processes, &fcfs_algo, &sjf_algo, &srtf_algo, &rr_algo, &priority_algo, num);
+        checkFastestAlgorithms(&fcfs_algo, &sjf_algo, &srtf_algo, &rr_algo, &priority_algo, choice);
+        print_to_file(choice, fcfs_processes, sjf_processes, srtf_processes, rr_processes, priority_processes, &fcfs_algo, &sjf_algo, &srtf_algo, &rr_algo, &priority_algo, num);
     }
     return 0;
 }
@@ -239,7 +239,7 @@ void initializeProcesses_SJF(Process processes[], int num){
         processes[i].processId = i + 1;
 
         //Set random arrival time
-        processes[i].arrivalTime = rand() % 20;
+        processes[i].arrivalTime = rand() % 10;
         
         //Set priority id
         processes[i].priorityId = rand() % BTUPPER;
@@ -262,11 +262,6 @@ void initializeProcesses_SJF(Process processes[], int num){
         }
     }
 
-    for (int i = 0; i < NUM_PROC; i++) {
-        printf("BACKUP HERE Process ID: %d, Arrival Time: %d, Priority ID: %d, Burst Time: %d\n",
-        backup[i].processId, backup[i].arrivalTime, backup[i].priorityId, backup[i].burstTime);
-    }
-
     //Setting burst time
     for(int i = 0; i < NUM_PROC; i++)
     { 
@@ -280,13 +275,21 @@ void initializeProcesses_SJF(Process processes[], int num){
             
             if(backup[i].arrivalTime < previousFT)
             {
-                backup[i].burstTime =  remainingTime + (rand() % (BTUPPER - remainingTime + 1));
-                backup[i].burstTime = backup[i].burstTime+2;
+                int value = (BTUPPER - remainingTime + 1);
+                if (value == 0)
+                {
+                    backup[i].burstTime =  remainingTime + (rand() % BTUPPER);
+                }
+                else
+                {
+                    backup[i].burstTime =  remainingTime + (rand() % value);
+                }
+                backup[i].burstTime = backup[i].burstTime+3;
             }else
             {
                 backup[i].burstTime = ((rand() % (BTUPPER - BTLOWER + 1)) + BTLOWER );
             }
-        }  
+        }
         
     }
 
@@ -1024,7 +1027,7 @@ void calculate_priority(Process processes[], int num)
     printf("\n");
 }
 
-void print_to_file(Process fcfs_processes[], Process sjf_processes[], Process srtf_processes[], Process rr_processes[], Process priority_processes[], Algo *fcfs_algo, Algo *sjf_algo, Algo *srtf_algo, Algo *rr_algo, Algo *priority_algo, int num)
+void print_to_file(int choice, Process fcfs_processes[], Process sjf_processes[], Process srtf_processes[], Process rr_processes[], Process priority_processes[], Algo *fcfs_algo, Algo *sjf_algo, Algo *srtf_algo, Algo *rr_algo, Algo *priority_algo, int num)
 {
 
     FILE *file;
@@ -1081,18 +1084,18 @@ void print_to_file(Process fcfs_processes[], Process sjf_processes[], Process sr
     fprintf(file, "Average response time for PRIORITY = %.2f\n", priority_algo->response_average);
     fprintf(file, "\n");
 
-    checkFastestAlgorithms_file(file, fcfs_algo, sjf_algo, srtf_algo, rr_algo, priority_algo);
+    checkFastestAlgorithms_file(file, fcfs_algo, sjf_algo, srtf_algo, rr_algo, priority_algo, choice);
 
     fclose(file);
 }
 
-void checkFastestAlgorithms(Algo *fcfs_algo, Algo *sjf_algo, Algo *srtf_algo, Algo *rr_algo, Algo *priority_algo)
+void checkFastestAlgorithms(Algo *fcfs_algo, Algo *sjf_algo, Algo *srtf_algo, Algo *rr_algo, Algo *priority_algo, int choice)
 {
     // Check fastest average turnaround time
     float fastest_turnaround = fcfs_algo->turnaround_average;
     char fastest_turnaround_algo[20] = "FCFS";
 
-    if (sjf_algo->turnaround_average < fastest_turnaround)
+    if (sjf_algo->turnaround_average <= fastest_turnaround && choice == 2)
     {
         fastest_turnaround = sjf_algo->turnaround_average;
         strcpy(fastest_turnaround_algo, "SJF");
@@ -1185,13 +1188,13 @@ void checkFastestAlgorithms(Algo *fcfs_algo, Algo *sjf_algo, Algo *srtf_algo, Al
     printf("\n");
 }
 
-void checkFastestAlgorithms_file(FILE *file, Algo *fcfs_algo, Algo *sjf_algo, Algo *srtf_algo, Algo *rr_algo, Algo *priority_algo)
+void checkFastestAlgorithms_file(FILE *file, Algo *fcfs_algo, Algo *sjf_algo, Algo *srtf_algo, Algo *rr_algo, Algo *priority_algo, int choice)
 {
     // Check fastest average turnaround time
     float fastest_turnaround = fcfs_algo->turnaround_average;
     char fastest_turnaround_algo[20] = "FCFS";
 
-    if (sjf_algo->turnaround_average < fastest_turnaround)
+    if (sjf_algo->turnaround_average <= fastest_turnaround && choice == 2)
     {
         fastest_turnaround = sjf_algo->turnaround_average;
         strcpy(fastest_turnaround_algo, "SJF");
