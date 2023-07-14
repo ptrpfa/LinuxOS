@@ -149,41 +149,6 @@ int main()
 void initializeProcesses_FCFS(Process processes[], int num)
 {
 
-    // srand(time(NULL));
-
-    // int priorityCount[6] = {0};
-    // int arrivalCount[9] = {0};
-    // int burstCount[8] = {0};
-
-    // for (int i = 0; i < num; i++) {
-    //     processes[i].processId = i + 1;
-
-    //     int priorityId;
-    //     do{
-    //         priorityId = rand() % 4 + 1;
-    //     } while (priorityCount[priorityId - 1] >= 2);
-
-    //     processes[i].priorityId = priorityId;
-    //     priorityCount[priorityId - 1]++;
-
-    //     int arrivalTime;
-    //     do {
-    //         arrivalTime = rand() % 9;
-    //     } while (arrivalCount[arrivalTime] >= 2);
-
-    //     processes[i].arrivalTime = arrivalTime;
-    //     arrivalCount[arrivalTime]++;
-
-    //     int burstTime;
-    //     do{
-    //         burstTime = rand() % 8 + 1;
-    //     } while (burstCount[burstTime - 1] >= 3);
-
-    //     processes[i].burstTime = burstTime;
-    //     burstCount[burstTime - 3]++;
-
-    // }
-
     int previousAT = 0;
     int previousBT = 0;
     int priorityId;
@@ -1101,19 +1066,19 @@ void checkFastestAlgorithms(Algo *fcfs_algo, Algo *sjf_algo, Algo *srtf_algo, Al
         strcpy(fastest_turnaround_algo, "SJF");
     }
 
-    if (srtf_algo->turnaround_average < fastest_turnaround)
+    if (srtf_algo->turnaround_average <= fastest_turnaround && choice == 3)
     {
         fastest_turnaround = srtf_algo->turnaround_average;
         strcpy(fastest_turnaround_algo, "SRTF");
     }
 
-    if (rr_algo->turnaround_average < fastest_turnaround)
+    if (rr_algo->turnaround_average <= fastest_turnaround && choice == 4)
     {
         fastest_turnaround = rr_algo->turnaround_average;
         strcpy(fastest_turnaround_algo, "RR");
     }
 
-    if (priority_algo->turnaround_average < fastest_turnaround)
+    if (priority_algo->turnaround_average <= fastest_turnaround && choice == 5)
     {
         fastest_turnaround = priority_algo->turnaround_average;
         strcpy(fastest_turnaround_algo, "Priority");
@@ -1127,25 +1092,25 @@ void checkFastestAlgorithms(Algo *fcfs_algo, Algo *sjf_algo, Algo *srtf_algo, Al
     float fastest_waiting = fcfs_algo->waiting_average;
     char fastest_waiting_algo[20] = "FCFS";
 
-    if (sjf_algo->waiting_average < fastest_waiting)
+    if (sjf_algo->waiting_average <= fastest_waiting && choice == 2)
     {
         fastest_waiting = sjf_algo->waiting_average;
         strcpy(fastest_waiting_algo, "SJF");
     }
 
-    if (srtf_algo->waiting_average < fastest_waiting)
+    if (srtf_algo->waiting_average <= fastest_waiting && choice == 3)
     {
         fastest_waiting = srtf_algo->waiting_average;
         strcpy(fastest_waiting_algo, "SRTF");
     }
 
-    if (rr_algo->waiting_average < fastest_waiting)
+    if (rr_algo->waiting_average <= fastest_waiting && choice == 4)
     {
         fastest_waiting = rr_algo->waiting_average;
         strcpy(fastest_waiting_algo, "RR");
     }
 
-    if (priority_algo->waiting_average < fastest_waiting)
+    if (priority_algo->waiting_average < fastest_waiting && choice == 5)
     {
         fastest_waiting = priority_algo->waiting_average;
         strcpy(fastest_waiting_algo, "Priority");
@@ -1159,25 +1124,25 @@ void checkFastestAlgorithms(Algo *fcfs_algo, Algo *sjf_algo, Algo *srtf_algo, Al
     float fastest_response = fcfs_algo->response_average;
     char fastest_response_algo[20] = "FCFS";
 
-    if (sjf_algo->response_average < fastest_response)
+    if (sjf_algo->response_average <= fastest_response && choice == 2)
     {
         fastest_response = sjf_algo->response_average;
         strcpy(fastest_response_algo, "SJF");
     }
 
-    if (srtf_algo->response_average < fastest_response)
+    if (srtf_algo->response_average <= fastest_response && choice == 3)
     {
         fastest_response = srtf_algo->response_average;
         strcpy(fastest_response_algo, "SRTF");
     }
 
-    if (rr_algo->response_average < fastest_response)
+    if (rr_algo->response_average <= fastest_response && choice == 4)
     {
         fastest_response = rr_algo->response_average;
         strcpy(fastest_response_algo, "RR");
     }
 
-    if (priority_algo->response_average < fastest_response)
+    if (priority_algo->response_average <= fastest_response && choice == 5)
     {
         fastest_response = priority_algo->response_average;
         strcpy(fastest_response_algo, "Priority");
@@ -1200,19 +1165,19 @@ void checkFastestAlgorithms_file(FILE *file, Algo *fcfs_algo, Algo *sjf_algo, Al
         strcpy(fastest_turnaround_algo, "SJF");
     }
 
-    if (srtf_algo->turnaround_average < fastest_turnaround)
+    if (srtf_algo->turnaround_average <= fastest_turnaround && choice == 3)
     {
         fastest_turnaround = srtf_algo->turnaround_average;
         strcpy(fastest_turnaround_algo, "SRTF");
     }
 
-    if (rr_algo->turnaround_average < fastest_turnaround)
+    if (rr_algo->turnaround_average <= fastest_turnaround && choice == 4)
     {
         fastest_turnaround = rr_algo->turnaround_average;
         strcpy(fastest_turnaround_algo, "RR");
     }
 
-    if (priority_algo->turnaround_average < fastest_turnaround)
+    if (priority_algo->turnaround_average <= fastest_turnaround && choice == 5)
     {
         fastest_turnaround = priority_algo->turnaround_average;
         strcpy(fastest_turnaround_algo, "Priority");
@@ -1226,25 +1191,25 @@ void checkFastestAlgorithms_file(FILE *file, Algo *fcfs_algo, Algo *sjf_algo, Al
     float fastest_waiting = fcfs_algo->waiting_average;
     char fastest_waiting_algo[20] = "FCFS";
 
-    if (sjf_algo->waiting_average < fastest_waiting)
+    if (sjf_algo->waiting_average <= fastest_waiting && choice == 2)
     {
         fastest_waiting = sjf_algo->waiting_average;
         strcpy(fastest_waiting_algo, "SJF");
     }
 
-    if (srtf_algo->waiting_average < fastest_waiting)
+    if (srtf_algo->waiting_average <= fastest_waiting && choice == 3)
     {
         fastest_waiting = srtf_algo->waiting_average;
         strcpy(fastest_waiting_algo, "SRTF");
     }
 
-    if (rr_algo->waiting_average < fastest_waiting)
+    if (rr_algo->waiting_average <= fastest_waiting && choice == 4)
     {
         fastest_waiting = rr_algo->waiting_average;
         strcpy(fastest_waiting_algo, "RR");
     }
 
-    if (priority_algo->waiting_average < fastest_waiting)
+    if (priority_algo->waiting_average <= fastest_waiting && choice == 5)
     {
         fastest_waiting = priority_algo->waiting_average;
         strcpy(fastest_waiting_algo, "Priority");
@@ -1258,25 +1223,25 @@ void checkFastestAlgorithms_file(FILE *file, Algo *fcfs_algo, Algo *sjf_algo, Al
     float fastest_response = fcfs_algo->response_average;
     char fastest_response_algo[20] = "FCFS";
 
-    if (sjf_algo->response_average < fastest_response)
+    if (sjf_algo->response_average <= fastest_response && choice == 2)
     {
         fastest_response = sjf_algo->response_average;
         strcpy(fastest_response_algo, "SJF");
     }
 
-    if (srtf_algo->response_average < fastest_response)
+    if (srtf_algo->response_average <= fastest_response && choice == 3)
     {
         fastest_response = srtf_algo->response_average;
         strcpy(fastest_response_algo, "SRTF");
     }
 
-    if (rr_algo->response_average < fastest_response)
+    if (rr_algo->response_average <= fastest_response && choice == 4)
     {
         fastest_response = rr_algo->response_average;
         strcpy(fastest_response_algo, "RR");
     }
 
-    if (priority_algo->response_average < fastest_response)
+    if (priority_algo->response_average <= fastest_response && choice == 5)
     {
         fastest_response = priority_algo->response_average;
         strcpy(fastest_response_algo, "Priority");
