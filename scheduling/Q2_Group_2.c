@@ -26,6 +26,7 @@ typedef struct
     float turnaround_average;
     float waiting_average;
     float response_average;
+    char * output;
 } Algo;
 
 // Setting Boundary for each algo
@@ -37,7 +38,8 @@ void initializeProcesses_Priority(Process processes[], int num);
 void setup(Process processes[], Process fcfs_processes[], Process sjf_processes[], Process srtf_processes[], Process rr_processes[], Process priority_processes[], int num);
 
 // Misc
-void draw_gantt(int gantt[], int size);
+char* draw_gantt(int gantt[], int size);
+//void print_gantt(int gantt[], int size);
 void swap(Process *a, Process *b);
 void sortProcesses(Process processes[], int num_process);
 void print_to_file(int choice, Process fcfs_processes[], Process sjf_processes[], Process srtf_processes[], Process rr_processes[], Process priority_processes[], Algo *fcfs_algo, Algo *sjf_algo, Algo *srtf_algo, Algo *rr_algo, Algo *priority_algo, int num);
@@ -46,17 +48,18 @@ void printInfo(Process processes[], Algo *algo, int num, char type[]);
 void calculate_algo(Process processes[], Process fcfs_processes[], Process sjf_processes[], Process srtf_processes[], Process rr_processes[], Process priority_processes[], Algo *fcfs_algo, Algo *sjf_algo, Algo *srtf_algo, Algo *rr_algo, Algo *priority_algo, int num);
 
 // Algorithm Functions
-void calculate_for_fcfs(Process processes[], int num);
-void calculate_fcfs(Process processes[], int num);
-void calclulate_sjf(Process processes[], int num);
-void calclulate_srtf(Process processes[], int num);
-void calculate_for_rr(Process processes[], int num, int quantum);
-void calculate_rr(Process processes[], int num, int quantam);
-void calculate_priority(Process processes[], int num);
+void calculate_for_fcfs(Process processes[], int num, Algo *fcfs_algo);
+void calculate_fcfs(Process processes[], int num, Algo *fcfs_algo);
+void calclulate_sjf(Process processes[], int num,Algo *sjf_algo);
+void calclulate_srtf(Process processes[], int num,Algo *srtf_algo);
+void calculate_for_rr(Process processes[], int num, int quantum,Algo *rr_algo);
+void calculate_rr(Process processes[], int num, int quantam,Algo *rr_algo);
+void calculate_priority(Process processes[], int num,Algo *priority_algo);
 
 // Checking results
 void checkFastestAlgorithms(Algo *fcfs_algo, Algo *sjf_algo, Algo *srtf_algo, Algo *rr_algo, Algo *priority_algo, int choice);
 void checkFastestAlgorithms_file(FILE *file, Algo *fcfs_algo, Algo *sjf_algo, Algo *srtf_algo, Algo *rr_algo, Algo *priority_algo, int choice);
+
 
 int main()
 {
@@ -136,6 +139,7 @@ int main()
         calculate_algo(processes, fcfs_processes, sjf_processes, srtf_processes, rr_processes, priority_processes, &fcfs_algo, &sjf_algo, &srtf_algo, &rr_algo, &priority_algo, num);
         checkFastestAlgorithms(&fcfs_algo, &sjf_algo, &srtf_algo, &rr_algo, &priority_algo, choice);
         print_to_file(choice, fcfs_processes, sjf_processes, srtf_processes, rr_processes, priority_processes, &fcfs_algo, &sjf_algo, &srtf_algo, &rr_algo, &priority_algo, num);
+
     }
     return 0;
 }
@@ -683,10 +687,11 @@ void initializeProcesses_RR(Process processes[], int num)
     // Find the largest burst time
     int largestBurstTime = burstTimes[NUM_PROC - 1];
 
-    // Calculate quantum
+    // Calculate dynamic time quantum
     int quantum = (median + largestBurstTime) / 2;
 
     // Recalculate if quantum is greater than 5 so that the gantt chart can fit
+    //this is because there is a constraint on our gantt chart
     while (quantum > 5)
     {
         // Generate random burst times
@@ -709,7 +714,7 @@ void initializeProcesses_RR(Process processes[], int num)
             }
         }
 
-        // Calculate median
+        // Recalculate median
         if (NUM_PROC % 2 == 0)
         {
             median = (burstTimes[NUM_PROC / 2] + burstTimes[(NUM_PROC / 2) - 1]) / 2.0;
@@ -722,7 +727,7 @@ void initializeProcesses_RR(Process processes[], int num)
         // Find the largest burst time
         largestBurstTime = burstTimes[NUM_PROC - 1];
 
-        // Calculate quantum
+        // Recalculate quantum
         quantum = (median + largestBurstTime) / 2;
     }
 
@@ -798,8 +803,13 @@ void initializeProcesses_Priority(Process processes[], int num)
         }
     }
     
+     processes[0].arrivalTime = 0;
+     processes[0].burstTime = burstTimes[0];
+     processes[0].priorityId = 1;  
+     processes[0].processId = 1;
+
     // Assign priorities based on the sorted burst times
-    for (int i = 0; i < NUM_PROC; i++) {
+    for (int i = 1; i < NUM_PROC; i++) {
         // Set Process ID
         processes[i].processId = i + 1;
         // Assign priority in ascending order
@@ -808,18 +818,216 @@ void initializeProcesses_Priority(Process processes[], int num)
         processes[i].burstTime = burstTimes[i]; 
         // Set previous arrival time
         processes[i].arrivalTime = ((rand() % (BTUPPER - processes[i-1].arrivalTime + 1)) + processes[i-1].arrivalTime);
+        }
+       
     }
 
-}
 
-void draw_gantt(int gantt[], int size)
+// void draw_gantt(int gantt[], int size)
+// {
+
+//     int count = 1;
+//     int previous = gantt[0];
+//     int time = 0;
+
+//     printf("|");
+
+//     for (int i = 1; i < size; i++)
+//     {
+//         if (gantt[i] == previous)
+//         {
+//             count++;
+//         }
+//         else
+//         {
+//             for (int j = 0; j < count; j++)
+//             {
+//                 printf("-");
+//             }
+//             printf("%d", previous);
+//             for (int j = 0; j < count; j++)
+//             {
+//                 printf("-");
+//             }
+//             printf("|");
+//             time += count;
+//             count = 1;
+//         }
+//         previous = gantt[i];
+//     }
+
+//     for (int j = 0; j < count; j++)
+//     {
+//         printf("-");
+//     }
+//     printf("%d", previous);
+//     for (int j = 0; j < count; j++)
+//     {
+//         printf("-");
+//     }
+//     printf("|");
+//     printf("\n");
+//     printf("0");
+//     count = 1;
+//     time = 0;
+//     previous = gantt[0];
+
+//     for (int i = 1; i < size + 1; i++)
+//     {
+//         if (gantt[i] == previous)
+//         {
+//             count++;
+//         }
+//         else
+//         {
+//             time += count;
+//             if (time >= 10)
+//             {
+//                 for (int j = 0; j < 2 * count; j++)
+//                 {
+//                     printf(" ");
+//                 }
+//                 printf("%d", time);
+//                 count = 1;
+//             }
+//             else
+//             {
+//                 for (int j = 0; j < 2 * count + 1; j++)
+//                 {
+//                     printf(" ");
+//                 }
+//                 printf("%d", time);
+//                 count = 1;
+//             }
+//         }
+//         previous = gantt[i];
+//     }
+//     time += count;
+//     for (int j = 0; j < 2 * count; j++)
+//     {
+//         printf(" ");
+//     }
+// }
+// void draw_gantt(int gantt[], int size)
+// {
+//     FILE *file = fopen("test.txt", "a");
+//     if (file == NULL) {
+//         printf("Error opening the file.\n");
+//         return;
+//     }
+
+//     fprintf(file, "\n"); // Start a new row in the file
+//     printf("\n"); // Start a new row in the terminal
+
+//     int count = 1;
+//     int previous = gantt[0];
+//     int time = 0;
+
+//     printf("|");
+//     fprintf(file, "|");
+
+//     for (int i = 1; i < size; i++)
+//     {
+//         if (gantt[i] == previous)
+//         {
+//             count++;
+//         }
+//         else
+//         {
+//             for (int j = 0; j < count; j++)
+//             {
+//                 printf("-");
+//                 fprintf(file, "-");
+//             }
+//             printf("%d", previous);
+//             fprintf(file, "%d", previous);
+//             for (int j = 0; j < count; j++)
+//             {
+//                 printf("-");
+//                 fprintf(file, "-");
+//             }
+//             printf("|");
+//             fprintf(file, "|");
+//             time += count;
+//             count = 1;
+//         }
+//         previous = gantt[i];
+//     }
+
+//     for (int j = 0; j < count; j++)
+//     {
+//         printf("-");
+//         fprintf(file, "-");
+//     }
+//     printf("%d", previous);
+//     fprintf(file, "%d", previous);
+//     for (int j = 0; j < count; j++)
+//     {
+//         printf("-");
+//         fprintf(file, "-");
+//     }
+//     printf("|");
+//     fprintf(file, "|");
+//     printf("\n");
+//     fprintf(file, "\n");
+//     printf("0");
+//     fprintf(file, "0");
+//     count = 1;
+//     time = 0;
+//     previous = gantt[0];
+
+//     for (int i = 1; i < size + 1; i++)
+//     {
+//         if (gantt[i] == previous)
+//         {
+//             count++;
+//         }
+//         else
+//         {
+//             time += count;
+//             if (time >= 10)
+//             {
+//                 for (int j = 0; j < 2 * count; j++)
+//                 {
+//                     printf(" ");
+//                     fprintf(file, " ");
+//                 }
+//                 printf("%d", time);
+//                 fprintf(file, "%d", time);
+//                 count = 1;
+//             }
+//             else
+//             {
+//                 for (int j = 0; j < 2 * count + 1; j++)
+//                 {
+//                     printf(" ");
+//                     fprintf(file, " ");
+//                 }
+//                 printf("%d", time);
+//                 fprintf(file, "%d", time);
+//                 count = 1;
+//             }
+//         }
+//         previous = gantt[i];
+//     }
+//     time += count;
+//     for (int j = 0; j < 2 * count; j++)
+//     {
+//         printf(" ");
+//         fprintf(file, " ");
+//     }
+//     fclose(file);
+// }
+
+char* draw_gantt(int gantt[], int size)
 {
-
     int count = 1;
     int previous = gantt[0];
     int time = 0;
+    char* output = (char*)malloc(10000 * sizeof(char));
+    int offset = 0;
 
-    printf("|");
+    offset += sprintf(output + offset, "|");
 
     for (int i = 1; i < size; i++)
     {
@@ -831,14 +1039,14 @@ void draw_gantt(int gantt[], int size)
         {
             for (int j = 0; j < count; j++)
             {
-                printf("-");
+                offset += sprintf(output + offset, "-");
             }
-            printf("%d", previous);
+            offset += sprintf(output + offset, "%d", previous);
             for (int j = 0; j < count; j++)
             {
-                printf("-");
+                offset += sprintf(output + offset, "-");
             }
-            printf("|");
+            offset += sprintf(output + offset, "|");
             time += count;
             count = 1;
         }
@@ -847,16 +1055,16 @@ void draw_gantt(int gantt[], int size)
 
     for (int j = 0; j < count; j++)
     {
-        printf("-");
+        offset += sprintf(output + offset, "-");
     }
-    printf("%d", previous);
+    offset += sprintf(output + offset, "%d", previous);
     for (int j = 0; j < count; j++)
     {
-        printf("-");
+        offset += sprintf(output + offset, "-");
     }
-    printf("|");
-    printf("\n");
-    printf("0");
+    offset += sprintf(output + offset, "|");
+    offset += sprintf(output + offset, "\n");
+    offset += sprintf(output + offset, "0");
     count = 1;
     time = 0;
     previous = gantt[0];
@@ -874,18 +1082,18 @@ void draw_gantt(int gantt[], int size)
             {
                 for (int j = 0; j < 2 * count; j++)
                 {
-                    printf(" ");
+                    offset += sprintf(output + offset, " ");
                 }
-                printf("%d", time);
+                offset += sprintf(output + offset, "%d", time);
                 count = 1;
             }
             else
             {
                 for (int j = 0; j < 2 * count + 1; j++)
                 {
-                    printf(" ");
+                    offset += sprintf(output + offset, " ");
                 }
-                printf("%d", time);
+                offset += sprintf(output + offset, "%d", time);
                 count = 1;
             }
         }
@@ -894,8 +1102,12 @@ void draw_gantt(int gantt[], int size)
     time += count;
     for (int j = 0; j < 2 * count; j++)
     {
-        printf(" ");
+        offset += sprintf(output + offset, " ");
     }
+
+    printf("%s", output);
+
+    return output;
 }
 
 // helper function for sorting to swap process positions in the array of structs
@@ -921,7 +1133,7 @@ void sortProcesses(Process processes[], int num_process)
     }
 }
 
-void calculate_for_fcfs(Process processes[], int num)
+void calculate_for_fcfs(Process processes[], int num, Algo *fcfs_algo)
 {
 
     int currentTime = 0; // initialize current time to 0
@@ -953,19 +1165,20 @@ void calculate_for_fcfs(Process processes[], int num)
         processes[i].waitingTime = processes[i].turnaroundTime - processes[i].burstTime; // assignment of waiting time
     }
 
-    draw_gantt(ganttBar, ganttCount); // draw the gantt chart with a function
+    fcfs_algo->output = draw_gantt(ganttBar, ganttCount); // draw the gantt chart with a function
+    //print_gantt(ganttBar,ganttCount);
     printf("\n");
 }
 
 // main function to sort and calculate the fcfs process details
-void calculate_fcfs(Process processes[], int num)
+void calculate_fcfs(Process processes[], int num, Algo *fcfs_algo)
 {
 
     sortProcesses(processes, num);
-    calculate_for_fcfs(processes, num);
+    calculate_for_fcfs(processes, num, fcfs_algo);
 }
 
-void calclulate_sjf(Process processes[], int num)
+void calclulate_sjf(Process processes[], int num, Algo *sjf_algo)
 {
 
     int rt[num];        // initialize array to keep track of the remaining time left to execute a process
@@ -1041,12 +1254,12 @@ void calclulate_sjf(Process processes[], int num)
             currentTime++;
         }
     }
-
-    draw_gantt(ganttBar, ganttCount); // draw the gantt chart with function
+    sjf_algo->output = draw_gantt(ganttBar, ganttCount);
+    //print_gantt(ganttBar,ganttCount);
     printf("\n");
 }
 
-void calclulate_srtf(Process processes[], int num)
+void calclulate_srtf(Process processes[], int num,Algo *srtf_algo)
 {
 
     int rt[num];        // initialize array to keep track of the remaining time left to execute a process
@@ -1127,11 +1340,12 @@ void calclulate_srtf(Process processes[], int num)
         }
     }
 
-    draw_gantt(ganttBar, ganttCount); // draw the gantt chart with function
+    srtf_algo->output = draw_gantt(ganttBar, ganttCount);
+    //print_gantt(ganttBar,ganttCount);
     printf("\n");
 }
 
-void calculate_for_rr(Process processes[], int num, int quantum)
+void calculate_for_rr(Process processes[], int num, int quantum,Algo *rr_algo)
 {
     int rt[num];           // initialize array to keep track of the remaining time left to execute a process
     int responseFlag[num]; // initialize array to keep track of which process has been responded to
@@ -1199,19 +1413,20 @@ void calculate_for_rr(Process processes[], int num, int quantum)
         }
     }
 
-    draw_gantt(ganttBar, ganttCount); // draw the gantt chart with function
+    rr_algo->output = draw_gantt(ganttBar, ganttCount);
+    //print_gantt(ganttBar,ganttCount);
     printf("\n");
 }
 
 // main function to sort and calculate the rr process details
-void calculate_rr(Process processes[], int num, int quantam)
+void calculate_rr(Process processes[], int num, int quantam,Algo *rr_algo)
 {
 
     sortProcesses(processes, num);
-    calculate_for_rr(processes, num, quantam);
+    calculate_for_rr(processes, num, quantam, rr_algo);
 }
 
-void calculate_priority(Process processes[], int num)
+void calculate_priority(Process processes[], int num,Algo *priority_algo)
 {
 
     int rt[num];        // initialize array to keep track of the remaining time left to execute a process
@@ -1294,9 +1509,11 @@ void calculate_priority(Process processes[], int num)
         }
     }
 
-    draw_gantt(ganttBar, ganttCount); // draw the gantt chart with function
+    priority_algo->output = draw_gantt(ganttBar, ganttCount);
     printf("\n");
 }
+
+
 
 void print_to_file(int choice, Process fcfs_processes[], Process sjf_processes[], Process srtf_processes[], Process rr_processes[], Process priority_processes[], Algo *fcfs_algo, Algo *sjf_algo, Algo *srtf_algo, Algo *rr_algo, Algo *priority_algo, int num)
 {
@@ -1310,6 +1527,9 @@ void print_to_file(int choice, Process fcfs_processes[], Process sjf_processes[]
         printf("Error opening the file.\n");
     }
     fprintf(file, "FCFS processes\n");
+    fprintf(file, "%s", fcfs_algo->output);   
+    fprintf(file, "\n");
+    fprintf(file, "\n");
     for (int i = 0; i < num; i++)
     {
         fprintf(file, "PID: %d Turnover Time: %d Waiting Time: %d Response Time: %d\n", fcfs_processes[i].processId, fcfs_processes[i].turnaroundTime, fcfs_processes[i].waitingTime, fcfs_processes[i].responseTime);
@@ -1318,7 +1538,12 @@ void print_to_file(int choice, Process fcfs_processes[], Process sjf_processes[]
     fprintf(file, "Average waiting time for FCFS = %.2f\n", fcfs_algo->waiting_average);
     fprintf(file, "Average response time for FCFS = %.2f\n", fcfs_algo->response_average);
     fprintf(file, "\n");
+
     fprintf(file, "SJF processes\n");
+    fprintf(file, "%s", sjf_algo->output);   
+    fprintf(file, "\n");
+    fprintf(file, "\n");
+
     for (int i = 0; i < num; i++)
     {
         fprintf(file, "PID: %d Turnover Time: %d Waiting Time: %d Response Time: %d\n", sjf_processes[i].processId, sjf_processes[i].turnaroundTime, sjf_processes[i].waitingTime, sjf_processes[i].responseTime);
@@ -1326,8 +1551,13 @@ void print_to_file(int choice, Process fcfs_processes[], Process sjf_processes[]
     fprintf(file, "Average turnaround time for SJF = %.2f\n", sjf_algo->turnaround_average);
     fprintf(file, "Average waiting time for SJF = %.2f\n", sjf_algo->waiting_average);
     fprintf(file, "Average response time for SJF = %.2f\n", sjf_algo->response_average);
-    fprintf(file, "\n");
+    fprintf(file, "\n\n");
+
     fprintf(file, "SRTF processes\n");
+    fprintf(file, "%s", srtf_algo->output);   
+    fprintf(file, "\n");
+    fprintf(file, "\n");
+
     for (int i = 0; i < num; i++)
     {
         fprintf(file, "PID: %d Turnover Time: %d Waiting Time: %d Response Time: %d\n", srtf_processes[i].processId, srtf_processes[i].turnaroundTime, srtf_processes[i].waitingTime, srtf_processes[i].responseTime);
@@ -1336,7 +1566,12 @@ void print_to_file(int choice, Process fcfs_processes[], Process sjf_processes[]
     fprintf(file, "Average waiting time for SRTF = %.2f\n", srtf_algo->waiting_average);
     fprintf(file, "Average response time for SRTF = %.2f\n", srtf_algo->response_average);
     fprintf(file, "\n");
+
     fprintf(file, "RR processes\n");
+    fprintf(file, "%s", rr_algo->output);   
+    fprintf(file, "\n");
+    fprintf(file, "\n");
+
     for (int i = 0; i < num; i++)
     {
         fprintf(file, "PID: %d Turnover Time: %d Waiting Time: %d Response Time: %d\n", rr_processes[i].processId, rr_processes[i].turnaroundTime, rr_processes[i].waitingTime, rr_processes[i].responseTime);
@@ -1345,7 +1580,12 @@ void print_to_file(int choice, Process fcfs_processes[], Process sjf_processes[]
     fprintf(file, "Average waiting time for RR = %.2f\n", rr_algo->waiting_average);
     fprintf(file, "Average response time for RR = %.2f\n", rr_algo->response_average);
     fprintf(file, "\n");
+
     fprintf(file, "Priority processes\n");
+    fprintf(file, "%s", priority_algo->output);   
+    fprintf(file, "\n");
+    fprintf(file, "\n");
+
     for (int i = 0; i < num; i++)
     {
         fprintf(file, "PID: %d Turnover Time: %d Waiting Time: %d Response Time: %d\n", priority_processes[i].processId, priority_processes[i].turnaroundTime, priority_processes[i].waitingTime, priority_processes[i].responseTime);
@@ -1356,7 +1596,7 @@ void print_to_file(int choice, Process fcfs_processes[], Process sjf_processes[]
     fprintf(file, "\n");
 
     checkFastestAlgorithms_file(file, fcfs_algo, sjf_algo, srtf_algo, rr_algo, priority_algo, choice);
-
+ 
     fclose(file);
 }
 
@@ -1416,7 +1656,7 @@ void checkFastestAlgorithms(Algo *fcfs_algo, Algo *sjf_algo, Algo *srtf_algo, Al
         strcpy(fastest_waiting_algo, "RR");
     }
 
-    if (priority_algo->waiting_average < fastest_waiting && choice == 5)
+    if (priority_algo->waiting_average <= fastest_waiting && choice == 5)
     {
         fastest_waiting = priority_algo->waiting_average;
         strcpy(fastest_waiting_algo, "Priority");
@@ -1736,18 +1976,18 @@ void calculate_algo(Process processes[], Process fcfs_processes[], Process sjf_p
     // Each process struct will have the updated turnaround, waiting and response time after the function call
     // Invoke printInfo to print the details of set of process
     printf("FCFS gantt chart\n");
-    calculate_fcfs(fcfs_processes, num);
+    calculate_fcfs(fcfs_processes, num, fcfs_algo);
     printInfo(fcfs_processes, fcfs_algo, num, "FCFS");
     printf("SJF gantt chart\n");
-    calclulate_sjf(sjf_processes, num);
+    calclulate_sjf(sjf_processes, num , sjf_algo);
     printInfo(sjf_processes, sjf_algo, num, "SJF");
     printf("SRTF gantt chart\n");
-    calclulate_srtf(srtf_processes, num);
+    calclulate_srtf(srtf_processes, num , srtf_algo);
     printInfo(srtf_processes, srtf_algo, num, "SRTF");
     printf("RR gantt chart\n");
-    calculate_rr(rr_processes, num, 5);
+    calculate_rr(rr_processes, num, 5, rr_algo);
     printInfo(rr_processes, rr_algo, num, "RR");
     printf("PRIORITY gantt chart\n");
-    calculate_priority(priority_processes, num);
+    calculate_priority(priority_processes, num , priority_algo);
     printInfo(priority_processes, priority_algo, num, "PRIORITY");
 }
