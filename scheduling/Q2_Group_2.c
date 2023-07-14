@@ -3,7 +3,12 @@
 #include <string.h>
 #include <limits.h>
 #include <time.h>
+
+//CONST
 #define NUM_PROC 6
+#define BTUPPER 10
+#define BTLOWER 3
+
 
 // Structure definitions
 typedef struct{
@@ -22,10 +27,24 @@ typedef struct{
     float response_average;
 } Algo;
 
-void initializeProcesses(Process processes[], int num);
+//Setting Boundary for each algo 
+void initializeProcesses_FCFS(Process processes[], int num);
+void initializeProcesses_SJF(Process processes[], int num);
+void initializeProcesses_SRTF(Process processes[], int num);
+void initializeProcesses_RR(Process processes[], int num);
+void initializeProcesses_Priority(Process processes[], int num);
+void setup(Process processes[], Process fcfs_processes[], Process sjf_processes[], Process srtf_processes[], Process rr_processes[], Process priority_processes[], int num);
+
+//Misc
 void draw_gantt(int gantt[], int size);
 void swap(Process *a, Process *b);
 void sortProcesses(Process processes[], int num_process);
+void print_to_file(Process fcfs_processes[], Process sjf_processes[], Process srtf_processes[], Process rr_processes[], Process priority_processes[], Algo *fcfs_algo, Algo *sjf_algo, Algo *srtf_algo, Algo *rr_algo, Algo *priority_algo, int num);
+void printTable(Process processes[]);
+void printInfo(Process processes[], Algo *algo, int num, char type[]);
+void calculate_algo(Process processes[], Process fcfs_processes[], Process sjf_processes[], Process srtf_processes[], Process rr_processes[], Process priority_processes[], Algo *fcfs_algo, Algo *sjf_algo, Algo *srtf_algo, Algo *rr_algo, Algo *priority_algo, int num);
+
+//Algorithm Functions
 void calculate_for_fcfs(Process processes[], int num);
 void calculate_fcfs(Process processes[], int num);
 void calclulate_sjf(Process processes[], int num);
@@ -33,13 +52,11 @@ void calclulate_srtf(Process processes[], int num);
 void calculate_for_rr(Process processes[], int num, int quantum);
 void calculate_rr(Process processes[], int num, int quantam);
 void calculate_priority(Process processes[], int num);
-void print_to_file(Process fcfs_processes[], Process sjf_processes[], Process srtf_processes[], Process rr_processes[], Process priority_processes[], Algo *fcfs_algo, Algo *sjf_algo, Algo *srtf_algo, Algo *rr_algo, Algo *priority_algo, int num);
+
+//Checking results
 void checkFastestAlgorithms(Algo *fcfs_algo, Algo *sjf_algo, Algo *srtf_algo, Algo *rr_algo, Algo *priority_algo);
 void checkFastestAlgorithms_file(FILE *file, Algo *fcfs_algo, Algo *sjf_algo, Algo *srtf_algo, Algo *rr_algo, Algo *priority_algo);
-void printTable(Process processes[]);
-void setup(Process processes[], Process fcfs_processes[], Process sjf_processes[], Process srtf_processes[], Process rr_processes[], Process priority_processes[], int num);
-void printInfo(Process processes[], Algo *algo, int num, char type[]);
-void calculate_algo(Process processes[], Process fcfs_processes[], Process sjf_processes[], Process srtf_processes[], Process rr_processes[], Process priority_processes[], Algo *fcfs_algo, Algo *sjf_algo, Algo *srtf_algo, Algo *rr_algo, Algo *priority_algo, int num);
+
 
 int main(){
 
@@ -48,12 +65,12 @@ int main(){
     int num = NUM_PROC;
 
     //Initialize structs
-    Process processes[num];
-    Process fcfs_processes[num];
-    Process sjf_processes[num];
-    Process srtf_processes[num];
-    Process rr_processes[num];
-    Process priority_processes[num];
+    Process processes[NUM_PROC];
+    Process fcfs_processes[NUM_PROC];
+    Process sjf_processes[NUM_PROC];
+    Process srtf_processes[NUM_PROC];
+    Process rr_processes[NUM_PROC];
+    Process priority_processes[NUM_PROC];
 
     Algo fcfs_algo;
     Algo sjf_algo;
@@ -87,70 +104,190 @@ int main(){
         switch(choice) {
             case 1:
                 printf("You chose FCFS\n");
-                initializeProcesses(processes, num); //Initialize base process struct with a set of values that will allow the chosen algo to win
-                setup(processes, fcfs_processes, sjf_processes, srtf_processes, rr_processes, priority_processes, num); //Assign base process generated values into all the algos
-                printTable(processes); //Print the table to show generated burst, arrival, priority and quantam
-                calculate_algo(processes, fcfs_processes, sjf_processes, srtf_processes, rr_processes, priority_processes, &fcfs_algo, &sjf_algo, &srtf_algo, &rr_algo, &priority_algo, num);
-                checkFastestAlgorithms(&fcfs_algo, &sjf_algo, &srtf_algo, &rr_algo, &priority_algo);
-                print_to_file(fcfs_processes, sjf_processes, srtf_processes, rr_processes, priority_processes, &fcfs_algo, &sjf_algo, &srtf_algo, &rr_algo, &priority_algo, num);
+                initializeProcesses_FCFS(processes, num); //Initialize base process struct with a set of values that will allow the chosen algo to win
                 break;
             case 2:
                 printf("You chose SJF\n");
+                initializeProcesses_SJF(processes, num);
                 break;
             case 3:
                 printf("You chose SRTF\n");
+                initializeProcesses_SRTF(processes, num);
                 break;
             case 4:
                 printf("You chose RR\n");
+                initializeProcesses_RR(processes, num);
                 break;
             case 5:
                 printf("You chose Priority\n");
+                initializeProcesses_Priority(processes, num);
                 break;
             case 6:
                 printf("Quitting program...\n");
                 return 0;
         }
+
+        setup(processes, fcfs_processes, sjf_processes, srtf_processes, rr_processes, priority_processes, num); //Assign base process generated values into all the algos
+        printTable(processes); //Print the table to show generated burst, arrival, priority and quantam
+        calculate_algo(processes, fcfs_processes, sjf_processes, srtf_processes, rr_processes, priority_processes, &fcfs_algo, &sjf_algo, &srtf_algo, &rr_algo, &priority_algo, num);
+        checkFastestAlgorithms(&fcfs_algo, &sjf_algo, &srtf_algo, &rr_algo, &priority_algo);
+        print_to_file(fcfs_processes, sjf_processes, srtf_processes, rr_processes, priority_processes, &fcfs_algo, &sjf_algo, &srtf_algo, &rr_algo, &priority_algo, num);
     }
     return 0;
 }
+/*
+    Process ID
+    Priority ID 
+    Arrival Time
+    Burst Time 
+    *Assign value*
+*/
+void initializeProcesses_FCFS(Process processes[], int num){
 
-void initializeProcesses(Process processes[], int num){
+    // srand(time(NULL));
 
+    // int priorityCount[6] = {0};
+    // int arrivalCount[9] = {0};
+    // int burstCount[8] = {0};
+
+    // for (int i = 0; i < num; i++) {
+    //     processes[i].processId = i + 1;
+
+    //     int priorityId;
+    //     do{
+    //         priorityId = rand() % 4 + 1;
+    //     } while (priorityCount[priorityId - 1] >= 2);
+
+    //     processes[i].priorityId = priorityId;
+    //     priorityCount[priorityId - 1]++;
+
+    //     int arrivalTime;
+    //     do {
+    //         arrivalTime = rand() % 9;
+    //     } while (arrivalCount[arrivalTime] >= 2); 
+
+    //     processes[i].arrivalTime = arrivalTime;
+    //     arrivalCount[arrivalTime]++;
+
+    //     int burstTime;
+    //     do{
+    //         burstTime = rand() % 8 + 1;
+    //     } while (burstCount[burstTime - 1] >= 3);
+
+    //     processes[i].burstTime = burstTime;
+    //     burstCount[burstTime - 3]++;
+
+    // }
+
+    int previousAT = 0;
+    int previousBT = 0;
+    int priorityId;
+
+    //init
     srand(time(NULL));
+    //Set process ID for first process
+    processes[0].processId = 1;
+    //Set burst time for first process
+    processes[0].burstTime = ((rand() % (BTUPPER - BTLOWER + 1)) + BTLOWER );
+    //Set arrival time for first process
+    processes[0].arrivalTime = 0;
+    //Set priority ID for first process
+    processes[0].priorityId = rand() % BTUPPER;
 
-    int priorityCount[6] = {0};
-    int arrivalCount[9] = {0};
-    int burstCount[8] = {0};
+    //For each of the process
+    for (int i = 1; i < NUM_PROC; i++) {
+        //Set Process ID
+        processes[i].processId = i+1;
 
-    for (int i = 0; i < num; i++) {
-        processes[i].processId = i + 1;
+        //Get prev burst time BT
+        previousBT = processes[i-1].burstTime;
+        //Set current burst time
+        processes[i].burstTime = ((rand() % (BTUPPER - previousBT + 1)) + previousBT);
 
-        int priorityId;
-        do{
-            priorityId = rand() % 4 + 1;
-        } while (priorityCount[priorityId - 1] >= 2);
+        //Get prev arrival time AT
+        previousAT = processes[i-1].arrivalTime;
+        //Set previous arrival time 
+        processes[i].arrivalTime = ((rand() % (BTUPPER - previousAT + 1)) + previousAT);
 
-        processes[i].priorityId = priorityId;
-        priorityCount[priorityId - 1]++;
-
-        int arrivalTime;
-        do {
-            arrivalTime = rand() % 9;
-        } while (arrivalCount[arrivalTime] >= 2); 
-
-        processes[i].arrivalTime = arrivalTime;
-        arrivalCount[arrivalTime]++;
-
-        int burstTime;
-        do{
-            burstTime = rand() % 8 + 1;
-        } while (burstCount[burstTime - 1] >= 3);
-
-        processes[i].burstTime = burstTime;
-        burstCount[burstTime - 3]++;
-
+        //Set priority ID 
+        processes[i].priorityId = rand() % BTUPPER;
     }
 }
+
+void initializeProcesses_SJF(Process processes[], int num){
+    
+    //init
+    srand(time(NULL));
+    int previousAT;
+    int previousFT;
+    int remainingTime;
+
+    //Set process ID for first process
+    processes[0].processId = 1;
+    //Set burst time for first process
+    processes[0].burstTime = ((rand() % (BTUPPER - BTLOWER + 1)) + BTLOWER );
+    //Set arrival time for first process
+    processes[0].arrivalTime = 0;
+    //Set priority ID for first process
+    processes[0].priorityId = rand() % BTUPPER;
+
+    //For each of the process
+    for (int i = 1; i < NUM_PROC; i++) {
+        //Set Process ID
+        processes[i].processId = i+1;
+
+        //Get prev arrival time AT
+        previousAT = processes[i-1].arrivalTime;
+        //Set previous arrival time 
+        processes[i].arrivalTime = rand() % 9 + previousAT;
+
+        //Remaining time to finish
+        previousFT = (processes[i-1].arrivalTime + processes[i-1].burstTime);
+
+        remainingTime = (previousFT-processes[i].arrivalTime);
+
+        if(processes[i].arrivalTime < previousFT)
+        {   
+            //floor is (previousFT-processes[i].arrivalTime)
+            //Upper is BTUPPER
+            //Generate a num between floor and upper 
+            //This is case where preemption may happens so we need to prevent it by making the next burst time to be bigger than the current burst time 
+            //processes[i].burstTime =  (rand() % BTUPPER + 1 - (previousFT-processes[i].arrivalTime)) + (previousFT-processes[i].arrivalTime);
+            processes[i].burstTime =  remainingTime + (rand() % (BTUPPER - remainingTime + 1));
+        }else
+        {
+             processes[i].burstTime = (rand() % BTUPPER + 1 - processes[i-1].burstTime) + processes[i-1].burstTime;
+        }
+
+        for(int z=1; z < i; z++)
+        {
+            previousFT = (processes[z-1].arrivalTime + processes[z-1].burstTime);
+        }
+
+        //Set process priority ID 
+        processes[i].priorityId = rand() % BTUPPER;
+    }
+}
+
+void initializeProcesses_SRTF(Process processes[], int num){
+
+
+}
+void initializeProcesses_RR(Process processes[], int num){
+
+    int quantam;
+    for (int i = 1; i < NUM_PROC; i++) {
+        
+    }
+
+
+
+}
+void initializeProcesses_Priority(Process processes[], int num){
+
+
+}
+
 
 void draw_gantt(int gantt[], int size){
 
