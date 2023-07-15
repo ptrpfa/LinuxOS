@@ -241,9 +241,7 @@ void initializeProcesses_SJF(Process processes[], int num) {
                 }else{
                     previousFT = processes[i - 1].arrivalTime + processes[i - 1].burstTime;
                     remainingTime = previousFT - processes[i].arrivalTime;
-                    
                 }
-                    
             }
             
             if (processes[i].arrivalTime < previousFT) {
@@ -301,7 +299,6 @@ void initializeProcesses_SRTF(Process processes[], int num)
         // Set current burst time
         processes[i].burstTime = ((rand() % (BTUPPER - BTLOWER + 1)) + BTLOWER);
 
-        
         // Set previous arrival time
         processes[i].arrivalTime = ((rand() % (BTUPPER - BTLOWER + 1)) + BTLOWER);
 
