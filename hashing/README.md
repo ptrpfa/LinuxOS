@@ -61,6 +61,17 @@ To just run the Linux Kernel Module and its User Space application, following th
     cd /linux/CSC1107_assignment
     make complete
     ```
+
+    The `complete` option automates the following steps, which could be executed independently to build and compile both the user and kernel space programs separately:
+    - Build and compile loadable Linux kernel module
+        ```
+        make
+        ```
+    - Compile user space program
+        ```
+        gcc CSC1107_Group_2_user.c -Wall -Wextra -Werror -pedantic -std=c99 -lssl -lcrypto -o CSC1107_Group_2_user    
+
+        ```
 3. Open two terminals, one for viewing the `dmesg` outputs, and another for running commands.
 4. On the first terminal, run the following command to keep viewing the `dmesg` contents:
     ```
