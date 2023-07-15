@@ -135,7 +135,8 @@ int main()
         }
 
         setup(processes, fcfs_processes, sjf_processes, srtf_processes, rr_processes, priority_processes, num); // Assign base process generated values into all the algos
-        printTable(processes);                                                                                  // Print the table to show generated burst, arrival, priority and quantam
+        printTable(processes); // Print the table to show generated burst, arrival, priority and quantam
+        printf("QUANTAM used = 5\n\n");
         calculate_algo(processes, fcfs_processes, sjf_processes, srtf_processes, rr_processes, priority_processes, &fcfs_algo, &sjf_algo, &srtf_algo, &rr_algo, &priority_algo, num);
         checkFastestAlgorithms(&fcfs_algo, &sjf_algo, &srtf_algo, &rr_algo, &priority_algo, choice);
         print_to_file(choice, fcfs_processes, sjf_processes, srtf_processes, rr_processes, priority_processes, &fcfs_algo, &sjf_algo, &srtf_algo, &rr_algo, &priority_algo, num);
@@ -1517,23 +1518,35 @@ void calculate_priority(Process processes[], int num,Algo *priority_algo)
 
 void print_to_file(int choice, Process fcfs_processes[], Process sjf_processes[], Process srtf_processes[], Process rr_processes[], Process priority_processes[], Algo *fcfs_algo, Algo *sjf_algo, Algo *srtf_algo, Algo *rr_algo, Algo *priority_algo, int num)
 {
+    /*
+    This function initializes a file pointer to use fprintf to write the process details into our .txt file
+    We pass in our process structs into the function so that we can read their details and display them using fprintf into the .txt file
+    */
 
     FILE *file;
 
-    file = fopen("output.txt", "w");
+    file = fopen("Q2_Group_2.txt", "w"); //Open the file in the directory, if file does not exist, create the file 
 
     if (file == NULL)
     {
         printf("Error opening the file.\n");
     }
-    fprintf(file, "FCFS processes\n");
-    fprintf(file, "%s", fcfs_algo->output);   
+    /*
+    Start writing into the file, for each algorithm type
+    Print the title of the algorithm
+    Print the gantt chart
+    Print the process details for each 6 processes
+    Print the details of the average performance for turnaround, waiting and response time
+    */
+    fprintf(file, "FCFS processes\n"); //Print title
+    fprintf(file, "%s", fcfs_algo->output); //Print gantt chart
     fprintf(file, "\n");
     fprintf(file, "\n");
-    for (int i = 0; i < num; i++)
+    for (int i = 0; i < num; i++) //Print details for each of the 6 processes
     {
         fprintf(file, "PID: %d Turnover Time: %d Waiting Time: %d Response Time: %d\n", fcfs_processes[i].processId, fcfs_processes[i].turnaroundTime, fcfs_processes[i].waitingTime, fcfs_processes[i].responseTime);
     }
+    //Print the details of the average performance
     fprintf(file, "Average turnaround time for FCFS = %.2f\n", fcfs_algo->turnaround_average);
     fprintf(file, "Average waiting time for FCFS = %.2f\n", fcfs_algo->waiting_average);
     fprintf(file, "Average response time for FCFS = %.2f\n", fcfs_algo->response_average);
@@ -1594,10 +1607,11 @@ void print_to_file(int choice, Process fcfs_processes[], Process sjf_processes[]
     fprintf(file, "Average waiting time for PRIORITY = %.2f\n", priority_algo->waiting_average);
     fprintf(file, "Average response time for PRIORITY = %.2f\n", priority_algo->response_average);
     fprintf(file, "\n");
-
+    
+    //Invoke the function to find the fastest algorithm and display it at the bottom of the .txt file
     checkFastestAlgorithms_file(file, fcfs_algo, sjf_algo, srtf_algo, rr_algo, priority_algo, choice);
  
-    fclose(file);
+    fclose(file); //Close the file
 }
 
 void checkFastestAlgorithms(Algo *fcfs_algo, Algo *sjf_algo, Algo *srtf_algo, Algo *rr_algo, Algo *priority_algo, int choice)
@@ -1606,25 +1620,31 @@ void checkFastestAlgorithms(Algo *fcfs_algo, Algo *sjf_algo, Algo *srtf_algo, Al
     float fastest_turnaround = fcfs_algo->turnaround_average;
     char fastest_turnaround_algo[20] = "FCFS";
 
-    if (sjf_algo->turnaround_average <= fastest_turnaround && choice == 2)
+    /*
+    Compare each algorithm with the fastest average turnaround time against each other
+    If the average time for that algo is faster, the fastest algo will update
+    If the algo is equally as fast and the choice is == to what the user has chosen, the chosen winner displayed will be what the user chose
+    This is to account for situations where the algorithm has tied with other algorithms, if more than 1 algorithm has the same time and is the fastest, we will display the user's chosen algorithm as the fastest
+    */
+    if (sjf_algo->turnaround_average < fastest_turnaround || (sjf_algo->turnaround_average == fastest_turnaround && choice == 2)) // Compare and check
     {
-        fastest_turnaround = sjf_algo->turnaround_average;
-        strcpy(fastest_turnaround_algo, "SJF");
+        fastest_turnaround = sjf_algo->turnaround_average; // Assign new fastest
+        strcpy(fastest_turnaround_algo, "SJF"); // Overwrite fastest algo char variable
     }
 
-    if (srtf_algo->turnaround_average <= fastest_turnaround && choice == 3)
+    if (srtf_algo->turnaround_average < fastest_turnaround || (srtf_algo->turnaround_average == fastest_turnaround && choice == 3))
     {
         fastest_turnaround = srtf_algo->turnaround_average;
         strcpy(fastest_turnaround_algo, "SRTF");
     }
 
-    if (rr_algo->turnaround_average <= fastest_turnaround && choice == 4)
+    if (rr_algo->turnaround_average < fastest_turnaround || (rr_algo->turnaround_average == fastest_turnaround && choice == 4))
     {
         fastest_turnaround = rr_algo->turnaround_average;
         strcpy(fastest_turnaround_algo, "RR");
     }
 
-    if (priority_algo->turnaround_average <= fastest_turnaround && choice == 5)
+    if (priority_algo->turnaround_average < fastest_turnaround || (priority_algo->turnaround_average == fastest_turnaround && choice == 5))
     {
         fastest_turnaround = priority_algo->turnaround_average;
         strcpy(fastest_turnaround_algo, "Priority");
@@ -1638,25 +1658,25 @@ void checkFastestAlgorithms(Algo *fcfs_algo, Algo *sjf_algo, Algo *srtf_algo, Al
     float fastest_waiting = fcfs_algo->waiting_average;
     char fastest_waiting_algo[20] = "FCFS";
 
-    if (sjf_algo->waiting_average <= fastest_waiting && choice == 2)
+    if (sjf_algo->waiting_average < fastest_waiting || (sjf_algo->waiting_average == fastest_waiting && choice == 2))
     {
         fastest_waiting = sjf_algo->waiting_average;
         strcpy(fastest_waiting_algo, "SJF");
     }
 
-    if (srtf_algo->waiting_average <= fastest_waiting && choice == 3)
+    if (srtf_algo->waiting_average < fastest_waiting || (srtf_algo->waiting_average == fastest_waiting && choice == 3))
     {
         fastest_waiting = srtf_algo->waiting_average;
         strcpy(fastest_waiting_algo, "SRTF");
     }
 
-    if (rr_algo->waiting_average <= fastest_waiting && choice == 4)
+    if (rr_algo->waiting_average < fastest_waiting || (rr_algo->waiting_average == fastest_waiting && choice == 4))
     {
         fastest_waiting = rr_algo->waiting_average;
         strcpy(fastest_waiting_algo, "RR");
     }
 
-    if (priority_algo->waiting_average <= fastest_waiting && choice == 5)
+    if (priority_algo->waiting_average < fastest_waiting || (priority_algo->waiting_average == fastest_waiting && choice == 5))
     {
         fastest_waiting = priority_algo->waiting_average;
         strcpy(fastest_waiting_algo, "Priority");
@@ -1670,25 +1690,25 @@ void checkFastestAlgorithms(Algo *fcfs_algo, Algo *sjf_algo, Algo *srtf_algo, Al
     float fastest_response = fcfs_algo->response_average;
     char fastest_response_algo[20] = "FCFS";
 
-    if (sjf_algo->response_average <= fastest_response && choice == 2)
+    if (sjf_algo->response_average < fastest_response || (sjf_algo->response_average == fastest_response && choice == 2))
     {
         fastest_response = sjf_algo->response_average;
         strcpy(fastest_response_algo, "SJF");
     }
 
-    if (srtf_algo->response_average <= fastest_response && choice == 3)
+    if (srtf_algo->response_average < fastest_response || (srtf_algo->response_average == fastest_response && choice == 3))
     {
         fastest_response = srtf_algo->response_average;
         strcpy(fastest_response_algo, "SRTF");
     }
 
-    if (rr_algo->response_average <= fastest_response && choice == 4)
+    if (rr_algo->response_average < fastest_response || (rr_algo->response_average == fastest_response && choice == 4))
     {
         fastest_response = rr_algo->response_average;
         strcpy(fastest_response_algo, "RR");
     }
 
-    if (priority_algo->response_average <= fastest_response && choice == 5)
+    if (priority_algo->response_average < fastest_response || (priority_algo->response_average == fastest_response && choice == 5))
     {
         fastest_response = priority_algo->response_average;
         strcpy(fastest_response_algo, "Priority");
@@ -1705,25 +1725,29 @@ void checkFastestAlgorithms_file(FILE *file, Algo *fcfs_algo, Algo *sjf_algo, Al
     float fastest_turnaround = fcfs_algo->turnaround_average;
     char fastest_turnaround_algo[20] = "FCFS";
 
-    if (sjf_algo->turnaround_average <= fastest_turnaround && choice == 2)
+    /*
+    This time we use the same function, but we use fprintf to write to the file instead of printf
+    We also pass in the file pointer to allow the program to write to the file
+    */
+    if (sjf_algo->turnaround_average < fastest_turnaround || (sjf_algo->turnaround_average == fastest_turnaround && choice == 2))
     {
         fastest_turnaround = sjf_algo->turnaround_average;
         strcpy(fastest_turnaround_algo, "SJF");
     }
 
-    if (srtf_algo->turnaround_average <= fastest_turnaround && choice == 3)
+    if (srtf_algo->turnaround_average < fastest_turnaround || (srtf_algo->turnaround_average == fastest_turnaround && choice == 3))
     {
         fastest_turnaround = srtf_algo->turnaround_average;
         strcpy(fastest_turnaround_algo, "SRTF");
     }
 
-    if (rr_algo->turnaround_average <= fastest_turnaround && choice == 4)
+    if (rr_algo->turnaround_average < fastest_turnaround || (rr_algo->turnaround_average == fastest_turnaround && choice == 4))
     {
         fastest_turnaround = rr_algo->turnaround_average;
         strcpy(fastest_turnaround_algo, "RR");
     }
 
-    if (priority_algo->turnaround_average <= fastest_turnaround && choice == 5)
+    if (priority_algo->turnaround_average < fastest_turnaround || (priority_algo->turnaround_average == fastest_turnaround && choice == 5))
     {
         fastest_turnaround = priority_algo->turnaround_average;
         strcpy(fastest_turnaround_algo, "Priority");
@@ -1737,25 +1761,25 @@ void checkFastestAlgorithms_file(FILE *file, Algo *fcfs_algo, Algo *sjf_algo, Al
     float fastest_waiting = fcfs_algo->waiting_average;
     char fastest_waiting_algo[20] = "FCFS";
 
-    if (sjf_algo->waiting_average <= fastest_waiting && choice == 2)
+    if (sjf_algo->waiting_average < fastest_waiting || (sjf_algo->waiting_average == fastest_waiting && choice == 2))
     {
         fastest_waiting = sjf_algo->waiting_average;
         strcpy(fastest_waiting_algo, "SJF");
     }
 
-    if (srtf_algo->waiting_average <= fastest_waiting && choice == 3)
+    if (srtf_algo->waiting_average < fastest_waiting || (srtf_algo->waiting_average == fastest_waiting && choice == 3))
     {
         fastest_waiting = srtf_algo->waiting_average;
         strcpy(fastest_waiting_algo, "SRTF");
     }
 
-    if (rr_algo->waiting_average <= fastest_waiting && choice == 4)
+    if (rr_algo->waiting_average < fastest_waiting || (rr_algo->waiting_average == fastest_waiting && choice == 4))
     {
         fastest_waiting = rr_algo->waiting_average;
         strcpy(fastest_waiting_algo, "RR");
     }
 
-    if (priority_algo->waiting_average <= fastest_waiting && choice == 5)
+    if (priority_algo->waiting_average < fastest_waiting || (priority_algo->waiting_average == fastest_waiting && choice == 5))
     {
         fastest_waiting = priority_algo->waiting_average;
         strcpy(fastest_waiting_algo, "Priority");
@@ -1769,25 +1793,25 @@ void checkFastestAlgorithms_file(FILE *file, Algo *fcfs_algo, Algo *sjf_algo, Al
     float fastest_response = fcfs_algo->response_average;
     char fastest_response_algo[20] = "FCFS";
 
-    if (sjf_algo->response_average <= fastest_response && choice == 2)
+    if (sjf_algo->response_average < fastest_response || (sjf_algo->response_average == fastest_response && choice == 2))
     {
         fastest_response = sjf_algo->response_average;
         strcpy(fastest_response_algo, "SJF");
     }
 
-    if (srtf_algo->response_average <= fastest_response && choice == 3)
+    if (srtf_algo->response_average < fastest_response || (srtf_algo->response_average == fastest_response && choice == 3))
     {
         fastest_response = srtf_algo->response_average;
         strcpy(fastest_response_algo, "SRTF");
     }
 
-    if (rr_algo->response_average <= fastest_response && choice == 4)
+    if (rr_algo->response_average < fastest_response || (rr_algo->response_average == fastest_response && choice == 4))
     {
         fastest_response = rr_algo->response_average;
         strcpy(fastest_response_algo, "RR");
     }
 
-    if (priority_algo->response_average <= fastest_response && choice == 5)
+    if (priority_algo->response_average < fastest_response || (priority_algo->response_average == fastest_response && choice == 5))
     {
         fastest_response = priority_algo->response_average;
         strcpy(fastest_response_algo, "Priority");
@@ -1818,6 +1842,11 @@ void printTable(Process processes[])
         table[i][j + 2] = processes[i].burstTime;
         table[i][j + 3] = processes[i].priorityId;
     }
+
+    /*
+    This function makes use of ASCII characters to print our table nicely into the CLI
+    All the numbers use are ASCII codes for printing a certain part of the table
+    */
 
     // Print the top border
 
