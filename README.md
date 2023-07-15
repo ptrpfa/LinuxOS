@@ -27,9 +27,9 @@ source-code/
         CSC1107_Group_2_user.c (user space application)
         Makefile (to compile kernel and user space programs)
         CSC1107_Group_2.sh (bash script)
+        bashrc.sh (bash script for code to be added to the end of .bashrc file for automated script execution)
 
     scheduling/
         Q2_Group_2.c (scheduling program)
-        Q2_Group_2.txt (output file)
     
 ```
