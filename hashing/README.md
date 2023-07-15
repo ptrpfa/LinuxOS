@@ -38,6 +38,36 @@
     ![Bash_4](/docs/bash_4.png)
     ![Bash_5](/docs/bash_5.png)
 
+### Script Automation
+To enable the automated running of the bash script upon startup, perform the following steps:
+1. Create a `count.txt` counter file in your user's home directory, whilst ensuring the counter value is initialised to `0`. An example is shown below:
+    ```
+    echo 0 > /home/pi/count.txt
+    ```
+2. Add the following code (also available [here](bashrc.sh)) to the end of your `.bashrc` file, ensuring that the file paths are pointing to the correct files:
+    ```
+    # Open .bashrc file on a text editor
+    nano ~/.bashrc
+
+    # Add the following code to the end of your ~/.bashrc file:
+
+    # Initialise variables
+    SCRIPT="/linux/CSC1107_assignment/CSC1107_Group_2.sh"
+    COUNTER_FILE="/home/pi/count.txt"
+    COUNTER=$(cat $COUNTER_FILE)
+
+    # Check if counter value exceeds 3
+    if [ $COUNTER -le 2 ]; then
+        # Run script
+        sudo $SCRIPT
+        # Increment counter
+        ((COUNTER++))
+        # Update counter file with updated counter value
+        echo $COUNTER > $COUNTER_FILE
+    fi
+    ```
+    Adding these instructions in your `~/.bashrc` file will allow the automated execution of the script during startup for up to 3 times.
+    
 ## Standalone Usage: Kernel Hash Module
 ---
 To just run the Linux Kernel Module and its User Space application, following the instructions below.
