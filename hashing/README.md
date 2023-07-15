@@ -29,8 +29,8 @@
     sudo ./CSC1107_Group_2.sh
     ```
 
-    A demo run of the bash script is provided below:
-    [![Bash_Run](/docs/bash_1.png)](/docs/bash_run.mov)
+    A demo run of the bash script is provided below or [here](https://www.youtube.com/watch?v=XhTe-5jQOa4):
+    [![Bash Script Demo](/docs/bash_1.png)](https://www.youtube.com/watch?v=XhTe-5jQOa4)
     Screenshots:
     ![Bash_1](/docs/bash_1.png)
     ![Bash_2](/docs/bash_2.png)
