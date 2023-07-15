@@ -4,7 +4,12 @@
 NEW_USER=CSC1107_Group_2
 home_dir=$(sudo -u "$SUDO_USER" -H sh -c 'echo $HOME')	#rmb to chg directory accordingly
 folder_name="Folder_Group_2" 							#rmb to chg directory accordingly
-source_dir="/linux/CSC1107_assignment" 					#rmb to change directory accordingly
+source_dir="/home/pi/linux/CSC1107_assignment" 					#rmb to change directory accordingly
+
+# Check count execute
+echo "Before read count: $count" #here should be blank
+count=$(cat /home/pi/linux/CSC1107_assignment/count.txt)
+echo "Current count: $count"
 
 # 1) Display the currently logged-in user in the Raspberry Pi on the screen.
 echo -e "1) Current user:"
@@ -124,3 +129,16 @@ ls -lR
 
 # 26) Print a message on the screen “The bash shell script of CSC1107_Group_2 has finished all tasks, and stop here.”. 
 echo -e "\n26) The bash shell script of CSC1107_Group_2 has finished all tasks, and stop here."
+
+
+# If count value <= 3, count + 1
+count=$(cat "/home/pi/linux/CSC1107_assignment/count.txt")
+count=$((count+1))
+echo "$count" > /home/pi/linux/CSC1107_assignment/count.txt
+
+echo -e "New Count: $count"
+
+# Else comment out when it is = 3.bashrc script automatic execution of this script file
+if [ $count -eq 3 ]; then
+    sed -i '/CSC1107_Group_2.sh/d' ~/.bashrc
+fi
