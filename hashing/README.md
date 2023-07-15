@@ -66,7 +66,7 @@ To enable the automated running of the bash script upon startup, perform the fol
         echo $COUNTER > $COUNTER_FILE
     fi
     ```
-    Adding these instructions in your ~/.bashrc file will allow the automated execution of the script during startup for up to 3 times.
+    Adding these instructions in your `~/.bashrc` file will allow the automated execution of the script during startup for up to 3 times.
     
 ## Standalone Usage: Kernel Hash Module
 ---
