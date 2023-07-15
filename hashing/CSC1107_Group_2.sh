@@ -51,7 +51,7 @@ sudo cp -r "$source_dir"/* .
 echo -e "\n8) Successfully copied 3 files (and other miscellaneous files!)\n"
 
 # 9) Compile the loadable kernel module from CSC1107_Group_2_kernel.c using the Makefile utility.
-make
+make complete
 echo -e "\n9) Compiled successfully"
 
 # 10) List all files in the current folder.

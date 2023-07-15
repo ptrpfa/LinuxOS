@@ -59,7 +59,7 @@ To just run the Linux Kernel Module and its User Space application, following th
 2. Run the `Makefile` using the command:
     ```
     cd /linux/CSC1107_assignment
-    make
+    make complete
     ```
 3. Open two terminals, one for viewing the `dmesg` outputs, and another for running commands.
 4. On the first terminal, run the following command to keep viewing the `dmesg` contents:
@@ -79,7 +79,7 @@ To just run the Linux Kernel Module and its User Space application, following th
 7. To clean up, run the following commands:
     ```
     sudo rmmod CSC1107_Group_2_kernel 
-    make clean
+    make complete_clean
     ```
 
     A sample of the program output is provided below:
