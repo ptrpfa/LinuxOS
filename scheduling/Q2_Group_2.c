@@ -39,7 +39,6 @@ void setup(Process processes[], Process fcfs_processes[], Process sjf_processes[
 
 // Misc
 char* draw_gantt(int gantt[], int size);
-//void print_gantt(int gantt[], int size);
 void swap(Process *a, Process *b);
 void sortProcesses(Process processes[], int num_process);
 void print_to_file(int choice, Process fcfs_processes[], Process sjf_processes[], Process srtf_processes[], Process rr_processes[], Process priority_processes[], Algo *fcfs_algo, Algo *sjf_algo, Algo *srtf_algo, Algo *rr_algo, Algo *priority_algo, int num);
@@ -53,7 +52,7 @@ void calculate_fcfs(Process processes[], int num, Algo *fcfs_algo);
 void calclulate_sjf(Process processes[], int num,Algo *sjf_algo);
 void calclulate_srtf(Process processes[], int num,Algo *srtf_algo);
 void calculate_for_rr(Process processes[], int num, int quantum,Algo *rr_algo);
-void calculate_rr(Process processes[], int num, int quantam,Algo *rr_algo);
+void calculate_rr(Process processes[], int num, int quantum,Algo *rr_algo);
 void calculate_priority(Process processes[], int num,Algo *priority_algo);
 
 // Checking results
@@ -135,8 +134,8 @@ int main()
         }
 
         setup(processes, fcfs_processes, sjf_processes, srtf_processes, rr_processes, priority_processes, num); // Assign base process generated values into all the algos
-        printTable(processes); // Print the table to show generated burst, arrival, priority and quantam
-        printf("QUANTAM used = 5\n\n");
+        printTable(processes); // Print the table to show generated burst, arrival, priority and quantum
+        printf("QUANTUM used = 5\n\n");
         calculate_algo(processes, fcfs_processes, sjf_processes, srtf_processes, rr_processes, priority_processes, &fcfs_algo, &sjf_algo, &srtf_algo, &rr_algo, &priority_algo, num);
         checkFastestAlgorithms(&fcfs_algo, &sjf_algo, &srtf_algo, &rr_algo, &priority_algo, choice);
         print_to_file(choice, fcfs_processes, sjf_processes, srtf_processes, rr_processes, priority_processes, &fcfs_algo, &sjf_algo, &srtf_algo, &rr_algo, &priority_algo, num);
@@ -1380,19 +1379,19 @@ void calculate_for_rr(Process processes[], int num, int quantum,Algo *rr_algo)
                     responseFlag[j] = 1; // set the process to responded
                 }
                 if (rt[j] > quantum)
-                { // check if remaining time of process is more than quantam
+                { // check if remaining time of process is more than quantum
                     rt[j] -= quantum;
                     for (int i = 0; i < quantum; i++)
                     {
-                        ganttBar[ganttCount] = processes[j].processId; // assign the number of seconds of quantam to the array index to keep track of the order execution of processes
+                        ganttBar[ganttCount] = processes[j].processId; // assign the number of seconds of quantum to the array index to keep track of the order execution of processes
                         ganttCount++;
                     }
 
-                    currentTime += quantum; // increment current time by quantam
+                    currentTime += quantum; // increment current time by quantum
                 }
                 else
                 {
-                    currentTime += rt[j]; // if rt <= quantam, increment current time by remaining time of the process left to execute
+                    currentTime += rt[j]; // if rt <= quantum, increment current time by remaining time of the process left to execute
                     for (int i = 0; i < rt[j]; i++)
                     {
                         ganttBar[ganttCount] = processes[j].processId; // assign the number of seconds of remaining time to the array index to keep track of the order execution of processes
@@ -1420,11 +1419,11 @@ void calculate_for_rr(Process processes[], int num, int quantum,Algo *rr_algo)
 }
 
 // main function to sort and calculate the rr process details
-void calculate_rr(Process processes[], int num, int quantam,Algo *rr_algo)
+void calculate_rr(Process processes[], int num, int quantum,Algo *rr_algo)
 {
 
     sortProcesses(processes, num);
-    calculate_for_rr(processes, num, quantam, rr_algo);
+    calculate_for_rr(processes, num, quantum, rr_algo);
 }
 
 void calculate_priority(Process processes[], int num,Algo *priority_algo)
