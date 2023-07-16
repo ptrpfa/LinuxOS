@@ -15,10 +15,9 @@
 
     ```
 
-    A demo run of the program command line interface is shown below:
+    A demo run of the program's command line interface (Main menu interface) is shown below:
 
     ```
-    Main menu interface
     Welcome to CSC1107OS scheduling algorithm program!
     --------------------------------------------------
     Please select an option
