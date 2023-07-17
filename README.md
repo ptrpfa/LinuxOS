@@ -12,7 +12,7 @@ README.md (this file)
 deliverables/
     Group02-report-CSC1107.docx
     Group02-CSC1107.mp4
-    Group02-CSC1107.pptx
+    Group02-presentation-CSC1107.pptx
 
 
 source-code/
