@@ -31,6 +31,7 @@ source-code/
 
     Q2/
         Q2_Group_2.c (scheduling program)
+        Q2_Group_2.txt (output file)
         README.md (instructions)
     
 ```
