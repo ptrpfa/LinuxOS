@@ -1,21 +1,15 @@
-### CSC1107 Operating Systems Group 2
-2200692 Pang Zi Jian Adrian<br>
-2200795 Ashley Tay Yong Jun<br>
-2200959 Peter Febrianto Afandy<br>
-2201014 Tng Jian Rong<br>
-2201159 Ryan Lai Wei Shao<br>
+### Linux OS Exploration
+Pang Zi Jian Adrian<br>
+Ashley Tay Yong Jun<br>
+Peter Febrianto Afandy<br>
+Tng Jian Rong<br>
+Ryan Lai Wei Shao<br>
 
 Our video presentation is available in this [link](https://www.youtube.com/watch?v=Ctgu4CQCZos).
 
 ### Submission Files
 ```
 README.md (this file)
-
-deliverables/
-    Group02-report-CSC1107.docx
-    Group02-CSC1107.mp4
-    Group02-presentation-CSC1107.pptx
-
 
 source-code/
     Q1/
